@@ -3,539 +3,389 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Synapse — AI that Thinks Ahead</title>
-<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<title>Synapse — AI Decision Engine</title>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@300;400;600;700&family=Syne:wght@400;600;700;800&display=swap" rel="stylesheet">
 <style>
-*{margin:0;padding:0;box-sizing:border-box;}
 :root{
-  --bg:#04040f;
-  --surface:#080818;
-  --card:#0c0c22;
-  --electric:#00d4ff;
-  --green:#00ff88;
-  --purple:#7c3aed;
-  --purple2:#a855f7;
-  --red:#ff3366;
-  --text:#e8e8ff;
-  --muted:#6b7280;
-  --border:rgba(0,212,255,0.12);
-  --border2:rgba(255,255,255,0.06);
+  --void:#010306;--deep:#030810;--card:#050d18;--glass:rgba(5,13,24,.7);
+  --cyan:#00e5ff;--lime:#39ff14;--amber:#ffb700;--magenta:#ff0080;
+  --white:#e8f0f8;--dim:#2a3a4a;--muted:#3a5060;--border:rgba(0,229,255,.1);
 }
+*{margin:0;padding:0;box-sizing:border-box;}
 html{scroll-behavior:smooth;}
-body{font-family:'Space Grotesk',sans-serif;background:var(--bg);color:var(--text);overflow-x:hidden;}
+body{background:var(--void);color:var(--white);font-family:'Syne',sans-serif;overflow-x:hidden;}
+canvas#bg{position:fixed;inset:0;z-index:0;pointer-events:none;}
 
-/* GRID BG */
-body::before{
-  content:'';position:fixed;inset:0;z-index:0;
-  background-image:
-    linear-gradient(rgba(0,212,255,0.03) 1px,transparent 1px),
-    linear-gradient(90deg,rgba(0,212,255,0.03) 1px,transparent 1px);
-  background-size:60px 60px;
-  pointer-events:none;
-}
+/* SCAN LINE */
+body::after{content:'';position:fixed;inset:0;z-index:1;background:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(0,0,0,.05) 2px,rgba(0,0,0,.05) 4px);pointer-events:none;}
 
-/* SCANLINE */
-body::after{
-  content:'';position:fixed;inset:0;z-index:1;
-  background:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(0,0,0,0.03) 2px,rgba(0,0,0,0.03) 4px);
-  pointer-events:none;opacity:0.4;
-}
-
-/* NAV */
-nav{
-  position:fixed;top:0;left:0;right:0;z-index:100;
-  display:flex;justify-content:space-between;align-items:center;
-  padding:1.2rem 4rem;
-  transition:background 0.3s;
-}
-nav.scrolled{background:rgba(4,4,15,0.92);backdrop-filter:blur(16px);border-bottom:1px solid var(--border);}
-.nav-logo{display:flex;align-items:center;gap:0.6rem;}
-.nav-logo-mark{
-  width:28px;height:28px;
-  background:conic-gradient(from 0deg,var(--electric),var(--purple),var(--green),var(--electric));
-  border-radius:6px;
-  animation:spin 8s linear infinite;
-}
-@keyframes spin{to{transform:rotate(360deg);}}
-.nav-logo-text{font-family:'Space Mono',monospace;font-size:1.1rem;font-weight:700;letter-spacing:2px;color:var(--text);}
+/* TOP HUD */
+.hud{position:fixed;top:0;left:0;right:0;z-index:200;background:rgba(1,3,6,.92);backdrop-filter:blur(20px);border-bottom:1px solid var(--border);}
+.hud-top{display:flex;justify-content:space-between;align-items:center;padding:.5rem 3rem;border-bottom:1px solid rgba(0,229,255,.06);}
+.hud-status{display:flex;align-items:center;gap:.6rem;font-family:'IBM Plex Mono',monospace;font-size:.58rem;letter-spacing:2px;color:var(--lime);}
+.hud-dot{width:5px;height:5px;border-radius:50%;background:var(--lime);animation:blinkDot 2s infinite;}
+@keyframes blinkDot{0%,100%{opacity:1}50%{opacity:.2}}
+.hud-metrics{display:flex;gap:2.5rem;}
+.hm{font-family:'IBM Plex Mono',monospace;font-size:.55rem;letter-spacing:1px;color:var(--muted);}
+.hm-v{color:var(--cyan);}
+.hud-nav{display:flex;justify-content:space-between;align-items:center;padding:.9rem 3rem;}
+.nav-brand{display:flex;align-items:center;gap:.7rem;}
+.brand-hex{width:28px;height:28px;background:conic-gradient(from 0deg,var(--cyan),var(--lime),var(--cyan));clip-path:polygon(50% 0%,100% 25%,100% 75%,50% 100%,0% 75%,0% 25%);animation:hexSpin 10s linear infinite;}
+@keyframes hexSpin{to{transform:rotate(360deg);}}
+.brand-name{font-family:'IBM Plex Mono',monospace;font-size:.95rem;font-weight:700;letter-spacing:3px;text-transform:uppercase;}
 .nav-links{display:flex;gap:2.5rem;list-style:none;}
-.nav-links a{
-  color:var(--muted);text-decoration:none;font-size:0.78rem;font-weight:500;letter-spacing:1px;
-  text-transform:uppercase;transition:color 0.2s;
-}
-.nav-links a:hover{color:var(--electric);}
-.nav-cta{
-  background:linear-gradient(135deg,var(--electric),var(--purple2));
-  color:#fff;padding:0.65rem 1.4rem;
-  font-size:0.78rem;font-weight:700;letter-spacing:1px;text-transform:uppercase;
-  text-decoration:none;border:none;cursor:pointer;
-  clip-path:polygon(0 0,calc(100% - 8px) 0,100% 8px,100% 100%,0 100%);
-  transition:filter 0.3s,transform 0.3s;
-}
-.nav-cta:hover{filter:brightness(1.2);transform:scale(1.03);}
+.nav-links a{font-family:'IBM Plex Mono',monospace;font-size:.6rem;letter-spacing:2px;text-transform:uppercase;color:var(--muted);text-decoration:none;transition:color .2s;}
+.nav-links a:hover{color:var(--cyan);}
+.nav-cta{font-family:'IBM Plex Mono',monospace;font-size:.6rem;letter-spacing:2px;text-transform:uppercase;background:var(--cyan);color:#000;padding:.6rem 1.4rem;border:none;cursor:pointer;clip-path:polygon(0 0,calc(100% - 7px) 0,100% 7px,100% 100%,0 100%);transition:filter .2s;text-decoration:none;}
+.nav-cta:hover{filter:brightness(1.2);}
+
+@keyframes glow{0%,100%{text-shadow:0 0 20px rgba(0,229,255,.3)}50%{text-shadow:0 0 60px rgba(0,229,255,.7),0 0 120px rgba(0,229,255,.2)}}
+@keyframes slideUp{from{opacity:0;transform:translateY(35px)}to{opacity:1;transform:translateY(0)}}
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+@keyframes barAnim{from{width:0}to{width:var(--w)}}
+@keyframes lineIn{from{transform:scaleX(0)}to{transform:scaleX(1)}}
+@keyframes ticker{from{transform:translateX(0)}to{transform:translateX(-50%)}}
 
 /* HERO */
-#hero{
-  min-height:100vh;
-  display:flex;align-items:center;
-  padding:8rem 4rem 4rem;
-  position:relative;z-index:2;
-}
-.hero-glow-orb{
-  position:absolute;
-  width:800px;height:800px;border-radius:50%;
-  background:radial-gradient(circle,rgba(0,212,255,0.06),transparent 60%);
-  top:50%;left:40%;transform:translate(-50%,-50%);
-  pointer-events:none;
-}
-.hero-inner{max-width:700px;position:relative;z-index:2;}
-.hero-status{
-  display:inline-flex;align-items:center;gap:0.6rem;
-  border:1px solid var(--border);
-  background:rgba(0,212,255,0.04);
-  padding:0.4rem 0.9rem;
-  font-family:'Space Mono',monospace;
-  font-size:0.65rem;color:var(--electric);letter-spacing:2px;
-  margin-bottom:2.5rem;
-  animation:blink 2s infinite;
-}
-.status-dot{width:6px;height:6px;border-radius:50%;background:var(--green);animation:pulse 1.5s infinite;}
-@keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:0.4;transform:scale(0.7)}}
-@keyframes blink{0%,95%,100%{opacity:1}97%{opacity:0.5}}
-h1{
-  font-size:clamp(3.5rem,9vw,9.5rem);
-  font-weight:700;line-height:0.92;
-  letter-spacing:-2px;margin-bottom:2rem;
-}
-.h1-electric{color:var(--electric);}
-.h1-dim{color:rgba(232,232,255,0.2);}
-.h1-grad{
-  background:linear-gradient(90deg,var(--purple2),var(--electric));
-  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
-}
-.hero-desc{font-size:1.05rem;color:var(--muted);line-height:1.7;font-weight:300;max-width:520px;margin-bottom:3rem;}
-.hero-btns{display:flex;gap:1rem;flex-wrap:wrap;margin-bottom:4rem;}
-.btn-electric{
-  background:var(--electric);color:#000;
-  padding:0.95rem 2.2rem;
-  font-size:0.85rem;font-weight:700;letter-spacing:1px;text-transform:uppercase;
-  text-decoration:none;border:none;cursor:pointer;
-  clip-path:polygon(0 0,calc(100% - 10px) 0,100% 10px,100% 100%,0 100%);
-  transition:filter 0.2s,transform 0.2s;
-}
-.btn-electric:hover{filter:brightness(1.15);transform:translateY(-2px);}
-.btn-ghost-electric{
-  background:transparent;color:var(--electric);
-  padding:0.95rem 2.2rem;
-  font-size:0.85rem;font-weight:600;letter-spacing:1px;text-transform:uppercase;
-  text-decoration:none;border:1px solid var(--border);display:inline-block;
-  transition:background 0.2s,border-color 0.2s;
-}
-.btn-ghost-electric:hover{background:rgba(0,212,255,0.06);border-color:var(--electric);}
-.hero-metrics{display:flex;gap:3rem;padding-top:2rem;border-top:1px solid var(--border2);}
-.hm{display:flex;flex-direction:column;}
-.hm-num{
-  font-family:'Space Mono',monospace;font-size:1.8rem;font-weight:700;
-  background:linear-gradient(90deg,var(--electric),var(--green));
-  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
-}
-.hm-label{font-size:0.65rem;color:var(--muted);letter-spacing:2px;text-transform:uppercase;margin-top:0.2rem;}
+#hero{min-height:100vh;padding:10rem 3rem 5rem;position:relative;z-index:2;display:flex;align-items:center;}
+.hero-inner{max-width:800px;}
+.hero-tag{display:inline-flex;align-items:center;gap:.6rem;border:1px solid var(--border);background:rgba(0,229,255,.04);padding:.4rem .9rem;font-family:'IBM Plex Mono',monospace;font-size:.6rem;color:var(--cyan);letter-spacing:2px;margin-bottom:3rem;animation:slideUp .8s ease both .2s;}
+h1{font-size:clamp(4rem,12vw,13rem);font-weight:800;line-height:.88;letter-spacing:-4px;margin-bottom:2.5rem;animation:slideUp 1s cubic-bezier(.16,1,.3,1) both .4s;}
+.h1-c{color:var(--cyan);display:block;animation:glow 4s ease-in-out infinite;}
+.h1-d{color:rgba(232,240,248,.15);display:block;}
+.h1-g{background:linear-gradient(90deg,var(--cyan),var(--lime));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;display:block;}
+.hero-sub{font-family:'IBM Plex Mono',monospace;font-size:.8rem;color:var(--muted);max-width:540px;line-height:1.75;margin-bottom:3rem;font-weight:300;animation:slideUp .9s ease both .6s;}
+.hero-btns{display:flex;gap:1rem;flex-wrap:wrap;margin-bottom:5rem;animation:slideUp .9s ease both .8s;}
+.btn-c{background:var(--cyan);color:#000;padding:.9rem 2.2rem;font-family:'IBM Plex Mono',monospace;font-size:.68rem;font-weight:700;letter-spacing:2px;text-transform:uppercase;border:none;cursor:pointer;text-decoration:none;clip-path:polygon(0 0,calc(100% - 9px) 0,100% 9px,100% 100%,0 100%);transition:filter .2s,transform .2s;display:inline-block;}
+.btn-c:hover{filter:brightness(1.15);transform:translateY(-2px);}
+.btn-g{background:transparent;color:var(--cyan);padding:.9rem 2.2rem;font-family:'IBM Plex Mono',monospace;font-size:.68rem;font-weight:400;letter-spacing:2px;text-transform:uppercase;border:1px solid var(--border);text-decoration:none;display:inline-block;transition:background .2s,border-color .2s;}
+.btn-g:hover{background:rgba(0,229,255,.06);border-color:var(--cyan);}
+.hero-metrics{display:flex;gap:4rem;border-top:1px solid rgba(255,255,255,.05);padding-top:3rem;animation:slideUp .9s ease both 1s;}
+.hmet-num{font-family:'IBM Plex Mono',monospace;font-size:1.8rem;font-weight:700;background:linear-gradient(90deg,var(--cyan),var(--lime));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;line-height:1;}
+.hmet-label{font-family:'IBM Plex Mono',monospace;font-size:.52rem;letter-spacing:2px;text-transform:uppercase;color:var(--muted);margin-top:.3rem;}
 
-/* TERMINAL */
-.hero-terminal{
-  position:absolute;right:4rem;top:50%;transform:translateY(-50%);
-  width:380px;z-index:3;
-  background:var(--card);border:1px solid var(--border);
-  font-family:'Space Mono',monospace;font-size:0.72rem;
-  box-shadow:0 0 60px rgba(0,212,255,0.08);
-}
-.terminal-bar{
-  display:flex;align-items:center;gap:0.5rem;
-  padding:0.7rem 1rem;border-bottom:1px solid var(--border2);
-}
-.t-dot{width:10px;height:10px;border-radius:50%;}
-.t-title{margin-left:0.5rem;color:var(--muted);font-size:0.65rem;letter-spacing:1px;}
-.terminal-body{padding:1rem;}
-.t-line{display:flex;gap:0.5rem;margin-bottom:0.4rem;line-height:1.5;}
-.t-prompt{color:var(--electric);flex-shrink:0;}
-.t-cmd{color:var(--green);}
-.t-out{color:var(--muted);padding-left:1.2rem;}
-.t-success{color:var(--green);}
-.t-cursor{
-  display:inline-block;width:8px;height:14px;
-  background:var(--electric);
-  animation:termCursor 1s infinite;
-  vertical-align:middle;margin-left:2px;
-}
-@keyframes termCursor{0%,100%{opacity:1}50%{opacity:0}}
+/* TERMINAL — full-width */
+#terminal{position:relative;z-index:2;margin:0 3rem;border:1px solid var(--border);background:var(--card);box-shadow:0 0 100px rgba(0,229,255,.06);}
+.term-bar{display:flex;align-items:center;gap:.5rem;padding:.8rem 1.2rem;border-bottom:1px solid rgba(255,255,255,.04);background:rgba(255,255,255,.02);}
+.td{width:10px;height:10px;border-radius:50%;}
+.term-title{font-family:'IBM Plex Mono',monospace;font-size:.6rem;color:var(--muted);letter-spacing:1px;margin-left:.5rem;}
+.term-body{padding:1.5rem;font-family:'IBM Plex Mono',monospace;font-size:.72rem;line-height:1.8;display:grid;grid-template-columns:1fr 1fr;gap:0 3rem;}
+.tl{display:flex;gap:.6rem;opacity:0;animation:fadeIn .3s ease forwards;}
+.tp{color:var(--cyan);}
+.tc{color:var(--lime);}
+.to{color:var(--muted);padding-left:1rem;}
+.ts{color:var(--lime);}
+.tw{color:var(--amber);}
+.term-dash{padding:1rem 1.5rem;border-top:1px solid rgba(255,255,255,.04);display:grid;grid-template-columns:repeat(4,1fr);gap:0;background:rgba(0,229,255,.02);}
+.td-item{padding:.8rem 1rem;border-right:1px solid rgba(255,255,255,.04);text-align:center;}
+.td-item:last-child{border-right:none;}
+.td-label{font-family:'IBM Plex Mono',monospace;font-size:.5rem;letter-spacing:2px;text-transform:uppercase;color:var(--muted);}
+.td-val{font-family:'IBM Plex Mono',monospace;font-size:1rem;font-weight:700;margin-top:.2rem;}
 
-/* FEATURES */
-#features{padding:6rem 4rem;position:relative;z-index:2;}
-.features-header{text-align:center;margin-bottom:4rem;}
-.sec-label{display:block;font-family:'Space Mono',monospace;font-size:0.65rem;letter-spacing:3px;text-transform:uppercase;color:var(--electric);margin-bottom:1rem;}
-h2.sec-h2{font-size:clamp(2.5rem,5vw,5rem);font-weight:700;letter-spacing:-1px;line-height:1.0;}
-h2.sec-h2 span{background:linear-gradient(90deg,var(--electric),var(--purple2));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+/* CAPABILITIES — bento */
+#capabilities{padding:6rem 3rem;position:relative;z-index:2;}
+.cap-head{margin-bottom:4rem;}
+.sec-mono{font-family:'IBM Plex Mono',monospace;font-size:.6rem;letter-spacing:3px;text-transform:uppercase;color:var(--cyan);display:block;margin-bottom:.8rem;}
+h2.sh{font-size:clamp(2.5rem,6vw,6rem);font-weight:800;letter-spacing:-2px;line-height:.92;}
+h2.sh span{background:linear-gradient(90deg,var(--cyan),var(--lime));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+.bento{display:grid;grid-template-columns:repeat(12,1fr);gap:1.5px;background:rgba(0,229,255,.04);margin-top:3rem;}
+.bc{background:var(--card);padding:2.5rem 2rem;position:relative;overflow:hidden;opacity:0;transform:translateY(20px);transition:opacity .6s,transform .6s,background .3s;}
+.bc.vis{opacity:1;transform:translateY(0);}
+.bc:hover{background:#0a1828;}
+.bc::before{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(0,229,255,.03),transparent 60%);pointer-events:none;opacity:0;transition:opacity .3s;}
+.bc:hover::before{opacity:1;}
+.bc.w4{grid-column:span 4;}
+.bc.w3{grid-column:span 3;}
+.bc.w6{grid-column:span 6;}
+.bc.w8{grid-column:span 8;}
+.bc-eye{font-family:'IBM Plex Mono',monospace;font-size:.52rem;letter-spacing:2px;text-transform:uppercase;color:var(--cyan);margin-bottom:1.5rem;display:flex;align-items:center;gap:.5rem;}
+.bc-eye::before{content:'';width:14px;height:1px;background:var(--cyan);}
+.bc-title{font-size:1.05rem;font-weight:700;letter-spacing:-.3px;margin-bottom:.7rem;}
+.bc-body{font-family:'IBM Plex Mono',monospace;font-size:.7rem;color:var(--muted);line-height:1.7;font-weight:300;}
+/* Mini bar chart */
+.mini-bars{display:flex;align-items:flex-end;gap:3px;height:50px;margin-top:1.5rem;}
+.mb{background:linear-gradient(180deg,var(--cyan),rgba(0,229,255,.2));border-radius:2px 2px 0 0;flex:1;height:0;transition:height 1s cubic-bezier(.34,1.56,.64,1);}
+/* Ping animation */
+.ping-wrap{margin-top:1.5rem;display:flex;align-items:center;gap:.8rem;}
+.ping-ring{width:40px;height:40px;border-radius:50%;border:1px solid var(--cyan);position:relative;animation:ping-anim 2s ease-in-out infinite;}
+@keyframes ping-anim{0%{box-shadow:0 0 0 0 rgba(0,229,255,.4)}100%{box-shadow:0 0 0 20px rgba(0,229,255,0)}}
+.ping-val{font-family:'IBM Plex Mono',monospace;font-size:1.2rem;font-weight:700;color:var(--lime);}
 
-.features-grid{
-  display:grid;
-  grid-template-columns:repeat(3,1fr);
-  gap:1px;background:var(--border2);
-  border:1px solid var(--border2);
-  max-width:1200px;margin:0 auto;
-}
-.feat{
-  background:var(--card);padding:2.5rem 2rem;
-  position:relative;overflow:hidden;
-  transition:background 0.3s;
-  opacity:0;transform:translateY(20px);
-  transition:opacity 0.6s,transform 0.6s,background 0.3s;
-}
-.feat.visible{opacity:1;transform:translateY(0);}
-.feat:hover{background:#0e0e28;}
-.feat-num{
-  font-family:'Space Mono',monospace;font-size:0.65rem;
-  color:var(--border);letter-spacing:2px;margin-bottom:1.5rem;
-}
-.feat-icon{
-  width:42px;height:42px;border:1px solid var(--border);
-  display:flex;align-items:center;justify-content:center;
-  font-size:1.2rem;margin-bottom:1.5rem;
-  position:relative;
-}
-.feat-icon::before{
-  content:'';position:absolute;inset:0;
-  background:linear-gradient(135deg,rgba(0,212,255,0.1),transparent);
-}
-.feat-title{font-size:1rem;font-weight:700;letter-spacing:0.5px;margin-bottom:0.7rem;}
-.feat-desc{font-size:0.85rem;color:var(--muted);line-height:1.65;font-weight:300;}
-.feat-tag{
-  display:inline-block;margin-top:1.5rem;
-  font-family:'Space Mono',monospace;font-size:0.6rem;letter-spacing:2px;
-  text-transform:uppercase;color:var(--electric);
-  border:1px solid var(--border);padding:0.3rem 0.7rem;
-}
+/* HOW — vertical timeline */
+#how{padding:6rem 3rem;background:var(--deep);border-top:1px solid rgba(255,255,255,.03);border-bottom:1px solid rgba(255,255,255,.03);position:relative;z-index:2;}
+.timeline{max-width:800px;margin:4rem auto 0;position:relative;}
+.timeline::before{content:'';position:absolute;left:24px;top:0;bottom:0;width:1px;background:linear-gradient(180deg,var(--cyan),var(--lime),transparent);}
+.tl-step{display:grid;grid-template-columns:60px 1fr;gap:2.5rem;padding:3rem 0;opacity:0;transform:translateX(-20px);transition:opacity .7s,transform .7s;}
+.tl-step.vis{opacity:1;transform:translateX(0);}
+.tl-node{width:48px;height:48px;border:1px solid var(--cyan);display:flex;align-items:center;justify-content:center;font-family:'IBM Plex Mono',monospace;font-size:.7rem;color:var(--cyan);background:var(--void);position:relative;z-index:1;flex-shrink:0;}
+.tl-title{font-size:1.1rem;font-weight:700;letter-spacing:-.3px;margin-bottom:.6rem;}
+.tl-body{font-family:'IBM Plex Mono',monospace;font-size:.7rem;color:var(--muted);line-height:1.75;font-weight:300;}
 
-/* HOW IT WORKS */
-#how{padding:6rem 4rem;background:var(--surface);position:relative;z-index:2;}
-.steps{max-width:900px;margin:3rem auto 0;position:relative;}
-.steps::before{
-  content:'';position:absolute;left:22px;top:0;bottom:0;
-  width:1px;background:linear-gradient(180deg,var(--electric),var(--purple),transparent);
-}
-.step-row{
-  display:grid;grid-template-columns:60px 1fr;gap:2rem;
-  padding:2.5rem 0;
-  opacity:0;transform:translateX(-20px);
-  transition:opacity 0.6s,transform 0.6s;
-}
-.step-row.visible{opacity:1;transform:translateX(0);}
-.step-circle{
-  width:44px;height:44px;border-radius:50%;
-  border:1px solid var(--electric);
-  display:flex;align-items:center;justify-content:center;
-  font-family:'Space Mono',monospace;font-size:0.75rem;color:var(--electric);
-  background:var(--bg);position:relative;z-index:1;flex-shrink:0;
-}
-.step-title{font-size:1.1rem;font-weight:700;letter-spacing:0.5px;margin-bottom:0.5rem;}
-.step-desc{font-size:0.88rem;color:var(--muted);line-height:1.7;font-weight:300;}
+/* PRICING — side by side with featured */
+#pricing{padding:6rem 3rem;position:relative;z-index:2;}
+.price-row{display:grid;grid-template-columns:repeat(3,1fr);gap:1.5px;background:rgba(0,229,255,.06);margin-top:4rem;}
+.pc{background:var(--card);padding:2.5rem 2rem;position:relative;opacity:0;transform:translateY(20px);transition:opacity .6s,transform .6s,background .3s;}
+.pc.vis{opacity:1;transform:translateY(0);}
+.pc:hover{background:#0a1828;}
+.pc.feat{background:rgba(0,229,255,.05);}
+.pc.feat::before{content:'MOST POPULAR';position:absolute;top:0;left:0;right:0;text-align:center;background:var(--cyan);color:#000;font-family:'IBM Plex Mono',monospace;font-size:.5rem;letter-spacing:3px;padding:.28rem;font-weight:700;}
+.pc.feat{padding-top:3rem;}
+.pt{font-family:'IBM Plex Mono',monospace;font-size:.6rem;letter-spacing:3px;text-transform:uppercase;color:var(--cyan);display:block;margin-bottom:1rem;}
+.pnum{font-size:3.5rem;font-weight:800;line-height:1;letter-spacing:-2px;margin-bottom:.3rem;}
+.pmo{font-family:'IBM Plex Mono',monospace;font-size:.6rem;color:var(--muted);margin-bottom:2rem;}
+.pf{list-style:none;display:flex;flex-direction:column;gap:.7rem;margin-bottom:2rem;}
+.pf li{font-family:'IBM Plex Mono',monospace;font-size:.68rem;color:var(--muted);display:flex;align-items:center;gap:.6rem;font-weight:300;}
+.pf li::before{content:'→';color:var(--cyan);flex-shrink:0;}
+.pf li.x{opacity:.25;}
+.pf li.x::before{content:'×';color:var(--muted);}
 
-/* PRICING */
-#pricing{padding:6rem 4rem;position:relative;z-index:2;}
-.pricing-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1.5rem;max-width:1000px;margin:3rem auto 0;}
-.price-card{
-  border:1px solid var(--border2);background:var(--card);padding:2.5rem 2rem;
-  position:relative;
-  opacity:0;transform:translateY(20px);
-  transition:opacity 0.6s,transform 0.6s,border-color 0.3s;
-}
-.price-card.visible{opacity:1;transform:translateY(0);}
-.price-card:hover{border-color:var(--border);}
-.price-card.featured{border-color:var(--electric);background:#060618;}
-.featured-label{
-  position:absolute;top:-1px;left:50%;transform:translateX(-50%);
-  background:var(--electric);color:#000;
-  font-family:'Space Mono',monospace;font-size:0.55rem;letter-spacing:2px;
-  text-transform:uppercase;padding:0.25rem 1rem;
-}
-.plan-tier{font-family:'Space Mono',monospace;font-size:0.7rem;letter-spacing:3px;text-transform:uppercase;color:var(--electric);margin-bottom:0.8rem;}
-.plan-price-num{font-size:3rem;font-weight:700;line-height:1;margin-bottom:0.3rem;}
-.plan-price-num sup{font-size:1.2rem;font-weight:400;color:var(--electric);}
-.plan-mo{font-size:0.75rem;color:var(--muted);letter-spacing:1px;margin-bottom:2rem;}
-.plan-feat-list{list-style:none;display:flex;flex-direction:column;gap:0.7rem;margin-bottom:2rem;}
-.plan-feat-list li{font-size:0.85rem;color:var(--muted);display:flex;align-items:center;gap:0.6rem;font-weight:300;}
-.plan-feat-list li::before{content:'→';color:var(--electric);font-size:0.75rem;flex-shrink:0;}
-.plan-feat-list li.off{opacity:0.3;}
-.plan-feat-list li.off::before{content:'—';color:var(--muted);}
+/* CTA — split */
+#cta{position:relative;z-index:2;display:grid;grid-template-columns:1fr 1fr;min-height:70vh;border-top:1px solid rgba(255,255,255,.04);}
+.cta-l{padding:7rem 4rem;background:var(--void);display:flex;flex-direction:column;justify-content:center;position:relative;overflow:hidden;}
+.cta-l::before{content:'';position:absolute;width:500px;height:500px;border-radius:50%;background:radial-gradient(circle,rgba(0,229,255,.05),transparent 60%);top:50%;left:50%;transform:translate(-50%,-50%);pointer-events:none;}
+.cta-r{padding:7rem 4rem;background:var(--card);display:flex;flex-direction:column;justify-content:center;border-left:1px solid var(--border);}
+#cta h2{font-size:clamp(2.5rem,5vw,5.5rem);font-weight:800;letter-spacing:-2px;line-height:.88;margin-bottom:1.5rem;position:relative;z-index:2;}
+#cta h2 span{color:var(--cyan);}
+#cta p{font-family:'IBM Plex Mono',monospace;font-size:.75rem;color:var(--muted);line-height:1.75;font-weight:300;max-width:400px;margin-bottom:3rem;position:relative;z-index:2;}
+.live-stats{display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-bottom:2.5rem;position:relative;z-index:2;}
+.ls{border:1px solid var(--border);padding:1.2rem;background:rgba(0,229,255,.03);}
+.ls-num{font-family:'IBM Plex Mono',monospace;font-size:1.8rem;font-weight:700;color:var(--cyan);line-height:1;}
+.ls-label{font-family:'IBM Plex Mono',monospace;font-size:.5rem;letter-spacing:2px;text-transform:uppercase;color:var(--muted);margin-top:.3rem;}
+.cf{display:flex;flex-direction:column;gap:.8rem;}
+.cf-label{font-family:'IBM Plex Mono',monospace;font-size:.58rem;letter-spacing:2px;text-transform:uppercase;color:var(--cyan);}
+.cf-inp{background:rgba(0,229,255,.04);border:1px solid var(--border);color:var(--white);padding:1rem 1.2rem;font-family:'IBM Plex Mono',monospace;font-size:.78rem;outline:none;transition:border-color .3s;clip-path:polygon(0 0,calc(100% - 8px) 0,100% 8px,100% 100%,0 100%);}
+.cf-inp:focus{border-color:var(--cyan);}
+.cf-inp::placeholder{color:var(--muted);}
+.cf-sub{background:linear-gradient(90deg,var(--cyan),var(--lime));color:#000;padding:1rem;font-family:'IBM Plex Mono',monospace;font-size:.68rem;font-weight:700;letter-spacing:2px;text-transform:uppercase;border:none;cursor:pointer;transition:filter .2s,transform .2s;clip-path:polygon(0 0,calc(100% - 8px) 0,100% 8px,100% 100%,0 100%);}
+.cf-sub:hover{filter:brightness(1.15);transform:scale(1.02);}
+#cfOk{display:none;font-family:'IBM Plex Mono',monospace;font-size:.7rem;color:var(--lime);letter-spacing:2px;padding:1rem;border:1px solid rgba(57,255,20,.2);background:rgba(57,255,20,.04);}
 
-/* CTA */
-#cta{
-  padding:8rem 4rem;text-align:center;
-  background:var(--bg);
-  position:relative;z-index:2;overflow:hidden;
-}
-.cta-bg-orb{
-  position:absolute;width:700px;height:700px;border-radius:50%;
-  background:radial-gradient(circle,rgba(124,58,237,0.08),transparent 60%);
-  top:50%;left:50%;transform:translate(-50%,-50%);
-  pointer-events:none;
-}
-#cta h2{
-  font-size:clamp(3rem,8vw,8rem);font-weight:700;
-  letter-spacing:-2px;line-height:0.92;
-  margin-bottom:1.5rem;position:relative;z-index:2;
-}
-#cta h2 span{color:var(--electric);}
-#cta p{color:var(--muted);font-size:1rem;font-weight:300;max-width:480px;margin:0 auto 3rem;line-height:1.7;position:relative;z-index:2;}
-.cta-form{display:flex;gap:0.75rem;justify-content:center;flex-wrap:wrap;max-width:480px;margin:0 auto;position:relative;z-index:2;}
-.cta-input{
-  flex:1;min-width:220px;background:var(--card);border:1px solid var(--border);
-  color:var(--text);padding:1rem 1.4rem;
-  font-family:'Space Grotesk',sans-serif;font-size:0.9rem;letter-spacing:0.5px;outline:none;
-  transition:border-color 0.3s;
-  clip-path:polygon(0 0,calc(100% - 8px) 0,100% 8px,100% 100%,0 100%);
-}
-.cta-input::placeholder{color:var(--muted);}
-.cta-input:focus{border-color:var(--electric);}
-.cta-go{background:var(--electric);color:#000;padding:1rem 2rem;border:none;cursor:pointer;font-family:'Space Grotesk',sans-serif;font-size:0.85rem;font-weight:700;letter-spacing:1px;text-transform:uppercase;clip-path:polygon(0 0,calc(100% - 8px) 0,100% 8px,100% 100%,0 100%);transition:filter 0.2s,transform 0.2s;}
-.cta-go:hover{filter:brightness(1.15);transform:scale(1.03);}
+footer{background:var(--void);border-top:1px solid rgba(255,255,255,.04);padding:1.5rem 3rem;display:flex;justify-content:space-between;align-items:center;position:relative;z-index:2;}
+.fb{font-family:'IBM Plex Mono',monospace;font-size:.8rem;letter-spacing:3px;text-transform:uppercase;color:var(--muted);}
+footer p{font-family:'IBM Plex Mono',monospace;font-size:.6rem;color:rgba(255,255,255,.1);}
+.fbk{font-family:'IBM Plex Mono',monospace;font-size:.58rem;color:rgba(0,229,255,.3);text-decoration:none;letter-spacing:1px;transition:color .3s;}
+.fbk:hover{color:var(--cyan);}
 
-footer{
-  border-top:1px solid var(--border2);padding:2rem 4rem;
-  display:flex;justify-content:space-between;align-items:center;
-  background:var(--surface);position:relative;z-index:2;
-}
-.footer-brand{font-family:'Space Mono',monospace;font-size:0.9rem;letter-spacing:3px;color:var(--muted);}
-footer p{font-size:0.75rem;color:rgba(255,255,255,0.15);}
-.footer-tag{font-size:0.65rem;color:var(--border);}
-
-@media(max-width:1100px){.hero-terminal{display:none;}}
-@media(max-width:900px){
-  nav{padding:1rem 1.5rem;}
+@media(max-width:1000px){
+  .hud-top{display:none;}
+  .hud-nav{padding:.8rem 1.5rem;}
   .nav-links{display:none;}
-  section{padding:4rem 1.5rem;}
-  .features-grid,.pricing-grid{grid-template-columns:1fr;}
-  footer{flex-direction:column;gap:0.5rem;padding:1.5rem;text-align:center;}
+  #hero{padding:7rem 1.5rem 3rem;}
+  .term-body{grid-template-columns:1fr;}
+  .bento{display:flex;flex-direction:column;}
+  .bc.w4,.bc.w3,.bc.w6,.bc.w8{grid-column:span 1;}
+  #how,#pricing,#capabilities{padding:4rem 1.5rem;}
+  .price-row{grid-template-columns:1fr;}
+  #cta{grid-template-columns:1fr;}
+  .cta-r{border-left:none;border-top:1px solid var(--border);}
+  .cta-l,.cta-r{padding:4rem 2rem;}
+  footer{flex-direction:column;gap:1rem;padding:1.5rem;text-align:center;}
 }
 </style>
 </head>
 <body>
+<canvas id="bg"></canvas>
 
-<nav id="navbar">
-  <div class="nav-logo">
-    <div class="nav-logo-mark"></div>
-    <div class="nav-logo-text">SYNAPSE</div>
+<div class="hud">
+  <div class="hud-top">
+    <div class="hud-status"><div class="hud-dot"></div>SYNAPSE — SYSTEM ONLINE · MODEL v4.2.1 · STABLE</div>
+    <div class="hud-metrics">
+      <div class="hm">LATENCY: <span class="hm-v" id="hLat">2.4ms</span></div>
+      <div class="hm">UPTIME: <span class="hm-v">99.97%</span></div>
+      <div class="hm">ACTIVE TEAMS: <span class="hm-v" id="hTeams">14,203</span></div>
+      <div class="hm">QUERIES TODAY: <span class="hm-v" id="hQ">1.8M</span></div>
+    </div>
   </div>
-  <ul class="nav-links">
-    <li><a href="#features">Features</a></li>
-    <li><a href="#how">How It Works</a></li>
-    <li><a href="#pricing">Pricing</a></li>
-  </ul>
-  <a href="#cta" class="nav-cta">Request Access</a>
-</nav>
+  <div class="hud-nav">
+    <div class="nav-brand">
+      <div class="brand-hex"></div>
+      <span class="brand-name">Synapse</span>
+    </div>
+    <ul class="nav-links">
+      <li><a href="#capabilities">Capabilities</a></li>
+      <li><a href="#how">How It Works</a></li>
+      <li><a href="#pricing">Pricing</a></li>
+    </ul>
+    <a href="#cta" class="nav-cta">Request Access</a>
+  </div>
+</div>
 
-<!-- HERO -->
 <section id="hero">
-  <div class="hero-glow-orb"></div>
   <div class="hero-inner">
-    <div class="hero-status"><span class="status-dot"></span> SYSTEM ONLINE — MODEL v4.2</div>
+    <div class="hero-tag"><span style="width:5px;height:5px;border-radius:50%;background:var(--lime);display:inline-block;animation:blinkDot 1.5s infinite"></span>EARLY ACCESS OPEN — LIMITED SEATS</div>
     <h1>
-      <span class="h1-electric">Think</span><br>
-      <span class="h1-dim">faster.</span><br>
-      <span class="h1-grad">Decide</span><br>
-      <span>better.</span>
+      <span class="h1-c">Think</span>
+      <span class="h1-d">faster.</span>
+      <span class="h1-g">Decide<br>better.</span>
     </h1>
-    <p class="hero-desc">Synapse is an AI decision engine that processes your data, understands your context, and delivers clear, actionable intelligence — in milliseconds.</p>
+    <p class="hero-sub">// Synapse is an AI decision engine that processes your data, understands<br>// your full context, and delivers clear actionable intelligence — in milliseconds.</p>
     <div class="hero-btns">
-      <a href="#cta" class="btn-electric">Start Free Trial</a>
-      <a href="#features" class="btn-ghost-electric">See Features</a>
+      <a href="#cta" class="btn-c">Start Free Trial</a>
+      <a href="#capabilities" class="btn-g">Explore Capabilities</a>
     </div>
     <div class="hero-metrics">
-      <div class="hm"><div class="hm-num">2.4ms</div><div class="hm-label">Response Time</div></div>
-      <div class="hm"><div class="hm-num">99.9%</div><div class="hm-label">Uptime SLA</div></div>
-      <div class="hm"><div class="hm-num">14K+</div><div class="hm-label">Teams Using It</div></div>
-    </div>
-  </div>
-  <div class="hero-terminal">
-    <div class="terminal-bar">
-      <div class="t-dot" style="background:#ff3b5c"></div>
-      <div class="t-dot" style="background:#ffbe0a"></div>
-      <div class="t-dot" style="background:#00ff88"></div>
-      <div class="t-title">synapse — terminal v4.2</div>
-    </div>
-    <div class="terminal-body">
-      <div class="t-line"><span class="t-prompt">›</span><span class="t-cmd">synapse analyze —scope=Q3_report.csv</span></div>
-      <div class="t-line"><span class="t-out">Loading 48,293 records...</span></div>
-      <div class="t-line"><span class="t-out">Running anomaly detection...</span></div>
-      <div class="t-line"><span class="t-out">Cross-referencing market data...</span></div>
-      <div class="t-line"><span class="t-success">✓ 3 critical insights found</span></div>
-      <div class="t-line"><span class="t-success">✓ Forecast confidence: 94.7%</span></div>
-      <div class="t-line"><span class="t-success">✓ Recommended actions: 5</span></div>
-      <div class="t-line"><span class="t-prompt">›</span><span class="t-cursor"></span></div>
+      <div><div class="hmet-num">2.4ms</div><div class="hmet-label">Avg Response</div></div>
+      <div><div class="hmet-num">99.9%</div><div class="hmet-label">Uptime SLA</div></div>
+      <div><div class="hmet-num">14K+</div><div class="hmet-label">Teams Active</div></div>
+      <div><div class="hmet-num">94.7%</div><div class="hmet-label">Forecast Accuracy</div></div>
     </div>
   </div>
 </section>
 
-<!-- FEATURES -->
-<section id="features">
-  <div class="features-header">
-    <span class="sec-label">Core Capabilities</span>
-    <h2 class="sec-h2">Intelligence, <span>engineered.</span></h2>
+<div id="terminal">
+  <div class="term-bar">
+    <div class="td" style="background:#ff5f56"></div>
+    <div class="td" style="background:#ffbd2e"></div>
+    <div class="td" style="background:#27c93f"></div>
+    <span class="term-title">synapse — live analysis · session_4829</span>
   </div>
-  <div class="features-grid">
-    <div class="feat">
-      <div class="feat-num">01 / 06</div>
-      <div class="feat-icon">⚡</div>
-      <div class="feat-title">Real-Time Analysis</div>
-      <p class="feat-desc">Stream your data and get live insights. Synapse processes inputs continuously so you never work from stale information.</p>
-      <div class="feat-tag">2.4ms latency</div>
-    </div>
-    <div class="feat" style="transition-delay:0.1s">
-      <div class="feat-num">02 / 06</div>
-      <div class="feat-icon">🧠</div>
-      <div class="feat-title">Contextual Memory</div>
-      <p class="feat-desc">Synapse learns your organization's patterns, vocabulary, and priorities — so every answer is informed by your full context.</p>
-      <div class="feat-tag">Org-aware AI</div>
-    </div>
-    <div class="feat" style="transition-delay:0.2s">
-      <div class="feat-num">03 / 06</div>
-      <div class="feat-icon">🔮</div>
-      <div class="feat-title">Predictive Modeling</div>
-      <p class="feat-desc">Move from reactive to proactive. Synapse forecasts outcomes and flags risks before they become problems.</p>
-      <div class="feat-tag">94.7% accuracy</div>
-    </div>
-    <div class="feat" style="transition-delay:0.3s">
-      <div class="feat-num">04 / 06</div>
-      <div class="feat-icon">🔗</div>
-      <div class="feat-title">Universal Integrations</div>
-      <p class="feat-desc">Connect Synapse to any data source — CRM, ERP, databases, APIs, spreadsheets. If your data lives somewhere, we connect to it.</p>
-      <div class="feat-tag">400+ connectors</div>
-    </div>
-    <div class="feat" style="transition-delay:0.4s">
-      <div class="feat-num">05 / 06</div>
-      <div class="feat-icon">🛡</div>
-      <div class="feat-title">Enterprise Security</div>
-      <p class="feat-desc">SOC 2 Type II certified. End-to-end encryption. Data never leaves your infrastructure unless you choose it. Full auditability.</p>
-      <div class="feat-tag">SOC 2 + GDPR</div>
-    </div>
-    <div class="feat" style="transition-delay:0.5s">
-      <div class="feat-num">06 / 06</div>
-      <div class="feat-icon">📊</div>
-      <div class="feat-title">Decision Reports</div>
-      <p class="feat-desc">Auto-generated reports that explain not just what the data says, but what your team should do about it. Clarity, not noise.</p>
-      <div class="feat-tag">Auto-generated</div>
-    </div>
+  <div class="term-body" id="termBody"></div>
+  <div class="term-dash">
+    <div class="td-item"><div class="td-label">Records Processed</div><div class="td-val" style="color:var(--cyan)">48,293</div></div>
+    <div class="td-item"><div class="td-label">Forecast Confidence</div><div class="td-val" style="color:var(--lime)">94.7%</div></div>
+    <div class="td-item"><div class="td-label">Anomalies Found</div><div class="td-val" style="color:var(--amber)">3</div></div>
+    <div class="td-item"><div class="td-label">Actions Queued</div><div class="td-val" style="color:var(--cyan)">5</div></div>
+  </div>
+</div>
+
+<section id="capabilities">
+  <div class="cap-head">
+    <span class="sec-mono">Core Capabilities</span>
+    <h2 class="sh">Intelligence,<br><span>engineered.</span></h2>
+  </div>
+  <div class="bento">
+    <div class="bc w8"><div class="bc-eye">Real-Time Analysis</div><div class="bc-title">Process streaming data with zero lag</div><p class="bc-body">// Synapse ingests live data streams and surfaces insights continuously — you never<br>// work from stale information again. 2.4ms average response across all query types.</p><div class="mini-bars" id="miniB"></div></div>
+    <div class="bc w4" style="transition-delay:.1s"><div class="bc-eye">Response Latency</div><div class="bc-title">2.4ms average</div><p class="bc-body">// Sub-5ms p99. Measured across 14K+ production environments. No cold start.</p><div class="ping-wrap"><div class="ping-ring"></div><span class="ping-val">LIVE</span></div></div>
+    <div class="bc w4" style="transition-delay:.15s"><div class="bc-eye">Context Memory</div><div class="bc-title">Org-aware from day 2</div><p class="bc-body">// Learns your company's patterns, vocabulary, and KPIs. Every response calibrated to your exact context.</p></div>
+    <div class="bc w4" style="transition-delay:.2s"><div class="bc-eye">Predictive Models</div><div class="bc-title">See problems before they happen</div><p class="bc-body">// Forecasts outcomes, flags risks, surfaces recommendations. Move from reactive to proactive.</p></div>
+    <div class="bc w4" style="transition-delay:.25s"><div class="bc-eye">Enterprise Security</div><div class="bc-title">SOC 2 Type II · GDPR</div><p class="bc-body">// End-to-end encryption. Data stays in your infrastructure unless you explicitly choose otherwise.</p></div>
+    <div class="bc w6" style="transition-delay:.3s"><div class="bc-eye">Universal Integrations</div><div class="bc-title">Connect anything in minutes — 400+ connectors</div><p class="bc-body">// CRM, ERP, SQL, REST APIs, spreadsheets. No ETL pipeline. No data team required.<br>// If your data lives somewhere, Synapse connects to it. Same-day setup for most stacks.</p></div>
+    <div class="bc w6" style="transition-delay:.35s"><div class="bc-eye">Decision Reports</div><div class="bc-title">Not just data — direction</div><p class="bc-body">// Auto-generated reports explain what the data says AND what your team should do next.<br>// Confidence scores, supporting evidence, and ranked recommendations in every output.</p></div>
   </div>
 </section>
 
-<!-- HOW IT WORKS -->
 <section id="how">
-  <div style="max-width:700px;margin:0 auto;">
-    <span class="sec-label">How It Works</span>
-    <h2 class="sec-h2">Three steps to <span>clarity.</span></h2>
-  </div>
-  <div class="steps">
-    <div class="step-row">
-      <div class="step-circle">01</div>
-      <div>
-        <div class="step-title">Connect Your Data</div>
-        <p class="step-desc">Link Synapse to your existing tools in minutes. No ETL pipeline, no data team required. Works with anything: CSV, SQL, REST APIs, SaaS apps.</p>
-      </div>
-    </div>
-    <div class="step-row" style="transition-delay:0.15s">
-      <div class="step-circle">02</div>
-      <div>
-        <div class="step-title">Synapse Learns Your Context</div>
-        <p class="step-desc">Over 24–48 hours, the model calibrates to your org's patterns, language, and KPIs. Every response from day two is already smarter than generic AI.</p>
-      </div>
-    </div>
-    <div class="step-row" style="transition-delay:0.3s">
-      <div class="step-circle">03</div>
-      <div>
-        <div class="step-title">Ask. Decide. Act.</div>
-        <p class="step-desc">Ask natural language questions. Get structured answers with confidence scores, supporting evidence, and recommended next actions. No data science degree needed.</p>
-      </div>
-    </div>
+  <span class="sec-mono">How It Works</span>
+  <h2 class="sh" style="margin-top:.8rem;">Three steps to <span>clarity.</span></h2>
+  <div class="timeline">
+    <div class="tl-step"><div class="tl-node">01</div><div><div class="tl-title">Connect Your Data</div><p class="tl-body">// Link Synapse to your existing tools in minutes. No data team required.<br>// Works with CSV, SQL, REST APIs, SaaS apps, or any structured data source.</p></div></div>
+    <div class="tl-step" style="transition-delay:.15s"><div class="tl-node">02</div><div><div class="tl-title">Synapse Calibrates</div><p class="tl-body">// Over 24–48 hours, the model learns your org's patterns, KPIs, and vocabulary.<br>// Every response becomes context-aware, not generic. Accuracy compounds over time.</p></div></div>
+    <div class="tl-step" style="transition-delay:.3s"><div class="tl-node">03</div><div><div class="tl-title">Ask. Decide. Act.</div><p class="tl-body">// Natural language questions. Structured answers with confidence scores, evidence,<br>// and recommended next actions. No data science degree required. Zero setup friction.</p></div></div>
   </div>
 </section>
 
-<!-- PRICING -->
 <section id="pricing">
-  <div style="text-align:center;max-width:600px;margin:0 auto;">
-    <span class="sec-label">Simple Pricing</span>
-    <h2 class="sec-h2">Scale with <span>confidence.</span></h2>
-  </div>
-  <div class="pricing-grid">
-    <div class="price-card">
-      <div class="plan-tier">Starter</div>
-      <div class="plan-price-num"><sup>$</sup>49</div>
-      <div class="plan-mo">/ month</div>
-      <ul class="plan-feat-list">
-        <li>5 connected sources</li>
-        <li>10,000 queries / mo</li>
-        <li>Standard analysis</li>
-        <li class="off">Predictive models</li>
-        <li class="off">Custom integrations</li>
-      </ul>
-      <a href="#cta" class="btn-ghost-electric" style="display:block;text-align:center">Get Started</a>
-    </div>
-    <div class="price-card featured">
-      <div class="featured-label">Most Popular</div>
-      <div class="plan-tier">Growth</div>
-      <div class="plan-price-num"><sup>$</sup>149</div>
-      <div class="plan-mo">/ month</div>
-      <ul class="plan-feat-list">
-        <li>25 connected sources</li>
-        <li>Unlimited queries</li>
-        <li>Predictive modeling</li>
-        <li>Decision reports</li>
-        <li class="off">Custom integrations</li>
-      </ul>
-      <a href="#cta" class="btn-electric" style="display:block;text-align:center">Start Free Trial</a>
-    </div>
-    <div class="price-card">
-      <div class="plan-tier">Enterprise</div>
-      <div class="plan-price-num" style="font-size:2rem;padding-top:0.4rem;">Custom</div>
-      <div class="plan-mo">contact us</div>
-      <ul class="plan-feat-list">
-        <li>Unlimited sources</li>
-        <li>Dedicated instance</li>
-        <li>Custom integrations</li>
-        <li>SLA guarantee</li>
-        <li>White-label option</li>
-      </ul>
-      <a href="#cta" class="btn-ghost-electric" style="display:block;text-align:center">Contact Sales</a>
-    </div>
+  <span class="sec-mono">Simple Pricing</span>
+  <h2 class="sh" style="margin-top:.8rem;">Scale with <span>confidence.</span></h2>
+  <div class="price-row">
+    <div class="pc"><span class="pt">Starter</span><div class="pnum">$49</div><div class="pmo">/ month</div><ul class="pf"><li>5 connected sources</li><li>10,000 queries/mo</li><li>Standard analysis</li><li class="x">Predictive models</li><li class="x">Custom integrations</li></ul><a href="#cta" class="btn-g" style="display:block;text-align:center;padding:.85rem">Get Started</a></div>
+    <div class="pc feat" style="transition-delay:.1s"><span class="pt">Growth</span><div class="pnum">$149</div><div class="pmo">/ month</div><ul class="pf"><li>25 connected sources</li><li>Unlimited queries</li><li>Predictive modeling</li><li>Decision reports</li><li class="x">Custom integrations</li></ul><a href="#cta" class="btn-c" style="display:block;text-align:center;padding:.85rem">Start Free Trial</a></div>
+    <div class="pc" style="transition-delay:.2s"><span class="pt">Enterprise</span><div class="pnum" style="font-size:2.5rem;padding-top:.4rem">Custom</div><div class="pmo">contact us</div><ul class="pf"><li>Unlimited sources</li><li>Dedicated instance</li><li>Custom integrations</li><li>SLA guarantee</li><li>White-label option</li></ul><a href="#cta" class="btn-g" style="display:block;text-align:center;padding:.85rem">Contact Sales</a></div>
   </div>
 </section>
 
-<!-- CTA -->
 <section id="cta">
-  <div class="cta-bg-orb"></div>
-  <span class="sec-label" style="position:relative;z-index:2;">Get Early Access</span>
-  <h2>The future<br>of <span>decisions</span><br>is here.</h2>
-  <p>Join 14,000+ teams using Synapse to move faster, with more confidence. Free 14-day trial. No credit card.</p>
-  <div class="cta-form">
-    <input class="cta-input" type="email" placeholder="you@company.com" id="ctaEmail">
-    <button class="cta-go" onclick="handleCTA()">Access →</button>
+  <div class="cta-l">
+    <span class="sec-mono" style="position:relative;z-index:2;margin-bottom:1.5rem">Get Early Access</span>
+    <h2>The future of<br><span>decisions</span><br>is here.</h2>
+    <p>// Join 14,000+ teams moving faster with more confidence.<br>// Free 14-day trial. No credit card required.</p>
+    <div class="live-stats">
+      <div class="ls"><div class="ls-num" id="lsT">14,203</div><div class="ls-label">Teams Active</div></div>
+      <div class="ls"><div class="ls-num">2.1B</div><div class="ls-label">Queries Processed</div></div>
+      <div class="ls"><div class="ls-num" id="lsL">2.4ms</div><div class="ls-label">Current Latency</div></div>
+      <div class="ls"><div class="ls-num">99.97%</div><div class="ls-label">Uptime</div></div>
+    </div>
   </div>
-  <p id="ctaThanks" style="display:none;color:var(--green);margin-top:1.5rem;font-family:'Space Mono',monospace;font-size:0.8rem;letter-spacing:2px;position:relative;z-index:2;">✓ ACCESS GRANTED. CHECK YOUR INBOX.</p>
+  <div class="cta-r">
+    <span class="sec-mono" style="margin-bottom:2rem">Request Access</span>
+    <div class="cf" id="cfForm">
+      <div class="cf-label">// Work email</div>
+      <input class="cf-inp" id="cfEmail" type="email" placeholder="you@company.com">
+      <div class="cf-label" style="margin-top:.5rem">// Company name</div>
+      <input class="cf-inp" type="text" placeholder="Acme Corporation">
+      <button class="cf-sub" onclick="doCta()">INITIALIZE_ACCESS →</button>
+    </div>
+    <div id="cfOk">// ACCESS_GRANTED — CHECK_INBOX.EXE<br>// Welcome to Synapse. Onboarding starts now.</div>
+  </div>
 </section>
 
 <footer>
-  <div class="footer-brand">SYNAPSE</div>
-  <p>© 2026 Synapse AI Inc. All rights reserved.</p>
-  <div class="footer-tag">Website by Ozan Sahin Web Design</div>
+  <span class="fb">SYNAPSE</span>
+  <p>© 2026 Synapse AI Inc. · Fictitious Sample Site</p>
+  <a href="index.html" class="fbk">← BACK_TO_PORTFOLIO</a>
 </footer>
 
 <script>
-const nav=document.getElementById('navbar');
-window.addEventListener('scroll',()=>nav.classList.toggle('scrolled',scrollY>60));
-const obs=new IntersectionObserver(e=>e.forEach(x=>{if(x.isIntersecting)x.target.classList.add('visible')}),{threshold:0.1});
-document.querySelectorAll('.feat,.step-row,.price-card').forEach(el=>obs.observe(el));
-function handleCTA(){
-  const v=document.getElementById('ctaEmail').value;
-  if(v.includes('@')){document.querySelector('.cta-form').style.display='none';document.getElementById('ctaThanks').style.display='block';}
+/* ---- Canvas data flow ---- */
+const cv=document.getElementById('bg'),ct=cv.getContext('2d');
+let W,H;
+function resize(){W=cv.width=window.innerWidth;H=cv.height=window.innerHeight;}
+resize();window.addEventListener('resize',resize);
+const streams=[];
+for(let i=0;i<30;i++)streams.push({x:Math.random()*2000,y:Math.random()*1200-300,speed:Math.random()*1.2+.4,chars:[],t:0,iv:Math.floor(Math.random()*4+2)});
+const CH='01アイウエオ→←↑∑∆πλΩ∞≈';
+(function draw(){
+  ct.fillStyle='rgba(1,3,6,.07)';ct.fillRect(0,0,W,H);
+  streams.forEach(s=>{
+    s.t++;if(s.t>=s.iv){s.t=0;s.chars.unshift(CH[Math.floor(Math.random()*CH.length)]);if(s.chars.length>16)s.chars.pop();}
+    s.y+=s.speed;if(s.y>H+400)s.y=-300;
+    s.chars.forEach((c,i)=>{
+      const a=i===0?1:(1-i/s.chars.length)*.5;
+      ct.fillStyle=i===0?`rgba(57,255,20,${a})`:`rgba(0,229,255,${a*.4})`;
+      ct.font=`${10+Math.random()}px 'IBM Plex Mono',monospace`;
+      ct.fillText(c,s.x,s.y-i*14);
+    });
+  });
+  requestAnimationFrame(draw);
+})();
+
+/* ---- Terminal ---- */
+const lines=[
+  {t:'prompt',v:'synapse analyze --input=Q4_data.csv'},
+  {t:'out',v:'Connecting to data source...'},
+  {t:'out',v:'Loading 48,293 records...'},
+  {t:'out',v:'Initializing context model...'},
+  {t:'out',v:'Running anomaly detection...'},
+  {t:'out',v:'Cross-referencing historical patterns...'},
+  {t:'success',v:'✓ 3 critical anomalies detected'},
+  {t:'success',v:'✓ Forecast model confidence: 94.7%'},
+  {t:'warn',v:'⚠ Revenue dip projected Q4 — see report_447'},
+  {t:'success',v:'✓ 5 recommended actions queued'},
+  {t:'prompt',v:'_'},
+];
+const tb=document.getElementById('termBody');
+let li=0;
+function addLine(){
+  if(li>=lines.length)return;
+  const l=lines[li++],d=document.createElement('div');
+  d.className='tl';d.style.animationDelay='0s';
+  if(l.t==='prompt')d.innerHTML=`<span class="tp">›</span><span class="tc">${l.v==='_'?'<span style="display:inline-block;width:7px;height:13px;background:var(--cyan);animation:blinkDot 1s infinite;vertical-align:middle"></span>':l.v}</span>`;
+  else if(l.t==='success')d.innerHTML=`<span class="ts">${l.v}</span>`;
+  else if(l.t==='warn')d.innerHTML=`<span class="tw">${l.v}</span>`;
+  else d.innerHTML=`<span class="to">${l.v}</span>`;
+  // alternate columns
+  tb.appendChild(d);
+  if(li<lines.length)setTimeout(addLine,l.t==='out'?450:300);
 }
+setTimeout(addLine,1000);
+
+/* ---- Mini bars ---- */
+const mb=document.getElementById('miniB');
+if(mb){[20,60,35,80,55,90,70,100,65,95,80,100].forEach(v=>{const b=document.createElement('div');b.className='mb';b.style.flex='1';mb.appendChild(b);setTimeout(()=>b.style.height=v*.5+'px',800+Math.random()*500);});}
+
+/* ---- Live HUD updates ---- */
+setInterval(()=>{
+  ['hLat','lsL'].forEach(id=>{const e=document.getElementById(id);if(e)e.textContent=(2+Math.random()*.8).toFixed(1)+'ms';});
+  const t=document.getElementById('hTeams');if(t)t.textContent=(14200+Math.floor(Math.random()*60)).toLocaleString();
+  const ls=document.getElementById('lsT');if(ls)ls.textContent=(14200+Math.floor(Math.random()*60)).toLocaleString();
+},2000);
+
+/* ---- Scroll reveal ---- */
+const io=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting)e.target.classList.add('vis');}),{threshold:.08});
+document.querySelectorAll('.bc,.tl-step,.pc').forEach(el=>io.observe(el));
+
+/* ---- CTA ---- */
+function doCta(){if(document.getElementById('cfEmail').value.includes('@')){document.getElementById('cfForm').style.display='none';document.getElementById('cfOk').style.display='block';}}
 </script>
 </body>
 </html>

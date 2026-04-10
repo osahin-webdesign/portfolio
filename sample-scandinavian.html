@@ -4,468 +4,312 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Ro — Mindful Work, Beautiful Life</title>
-<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;1,9..144,300;1,9..144,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&family=Nunito:wght@200;300;400;600;700&display=swap" rel="stylesheet">
 <style>
-*{margin:0;padding:0;box-sizing:border-box;}
 :root{
-  --linen:#f8f5f0;
-  --birch:#ede8e0;
-  --bark:#c2b5a0;
-  --moss:#7a8f72;
-  --slate:#4a5568;
-  --ink:#2d2d2a;
-  --warm:#e8ddd0;
-  --terracotta:#c4856a;
-  --sage:#a8c4a2;
-  --sky:#b8d4e0;
+  --snow:#faf8f4;--birch:#f0ebe0;--warm:#e4dace;--bark:#b0a090;
+  --forest:#3d5c3d;--forest2:#2a4028;--clay:#c06040;--slate:#3c3830;
+  --sky:#c0d8e8;--sand:#d8c8a8;
 }
+*{margin:0;padding:0;box-sizing:border-box;}
 html{scroll-behavior:smooth;}
-body{font-family:'DM Sans',sans-serif;background:var(--linen);color:var(--ink);overflow-x:hidden;}
+body{background:var(--snow);color:var(--slate);font-family:'Nunito',sans-serif;overflow-x:hidden;}
+
+/* SCROLL PROGRESS */
+#sp{position:fixed;top:0;left:0;height:3px;background:var(--forest);z-index:9999;width:0%;}
 
 /* NAV */
-nav{
-  position:fixed;top:0;left:0;right:0;z-index:100;
-  display:flex;justify-content:space-between;align-items:center;
-  padding:1.5rem 4rem;
-  transition:background 0.4s,box-shadow 0.4s;
-}
-nav.scrolled{background:rgba(248,245,240,0.92);backdrop-filter:blur(12px);box-shadow:0 1px 0 var(--warm);}
-.nav-logo{font-family:'Fraunces',serif;font-size:1.6rem;font-weight:400;letter-spacing:-0.5px;color:var(--ink);}
-.nav-logo em{font-style:italic;color:var(--terracotta);}
+nav{position:fixed;top:3px;left:0;right:0;z-index:500;display:flex;justify-content:space-between;align-items:center;padding:1.2rem 3.5rem;transition:background .4s,box-shadow .4s;}
+nav.on{background:rgba(250,248,244,.95);backdrop-filter:blur(16px);box-shadow:0 1px 0 var(--warm);}
+.nav-brand{font-family:'Libre Baskerville',serif;font-style:italic;font-size:1.8rem;font-weight:400;color:var(--slate);}
+.nav-brand em{color:var(--clay);font-style:italic;}
 .nav-links{display:flex;gap:2.5rem;list-style:none;}
-.nav-links a{color:var(--bark);text-decoration:none;font-size:0.8rem;font-weight:500;letter-spacing:0.5px;transition:color 0.3s;}
-.nav-links a:hover{color:var(--ink);}
-.nav-start{
-  background:var(--ink);color:var(--linen);
-  padding:0.65rem 1.4rem;border-radius:100px;
-  font-size:0.8rem;font-weight:500;text-decoration:none;
-  transition:background 0.3s,transform 0.3s;
-}
-.nav-start:hover{background:var(--moss);transform:scale(1.02);}
+.nav-links a{font-size:.8rem;font-weight:600;color:var(--bark);text-decoration:none;letter-spacing:.5px;transition:color .3s;}
+.nav-links a:hover{color:var(--slate);}
+.nav-cta{background:var(--slate);color:var(--snow);padding:.65rem 1.5rem;border-radius:100px;font-size:.78rem;font-weight:600;text-decoration:none;transition:background .3s,transform .3s;}
+.nav-cta:hover{background:var(--forest);transform:scale(1.03);}
 
-/* HERO */
-#hero{
-  min-height:100vh;
-  display:grid;grid-template-columns:1.1fr 0.9fr;
-  align-items:center;
-  padding:8rem 4rem 4rem;
-  position:relative;
-  background:var(--linen);
-}
-.hero-left{max-width:540px;}
-.hero-season{
-  display:inline-flex;align-items:center;gap:0.6rem;
-  color:var(--moss);font-size:0.75rem;font-weight:500;
-  letter-spacing:1px;margin-bottom:2rem;
-}
-.hero-season::before{content:'';width:24px;height:1px;background:var(--moss);}
-h1{
-  font-family:'Fraunces',serif;
-  font-size:clamp(3rem,6vw,6rem);
-  font-weight:300;line-height:1.1;
-  letter-spacing:-1px;margin-bottom:1.5rem;
-}
-h1 em{font-style:italic;color:var(--terracotta);}
-.hero-body{color:var(--slate);line-height:1.8;font-size:1.05rem;font-weight:300;max-width:440px;margin-bottom:3rem;}
-.hero-btns{display:flex;gap:1rem;flex-wrap:wrap;}
-.btn-ink{
-  background:var(--ink);color:var(--linen);
-  padding:0.9rem 2rem;border-radius:100px;
-  font-size:0.85rem;font-weight:500;text-decoration:none;
-  transition:background 0.3s,transform 0.3s;border:none;cursor:pointer;
-}
-.btn-ink:hover{background:var(--moss);transform:translateY(-2px);}
-.btn-ghost{
-  background:transparent;color:var(--ink);
-  padding:0.9rem 2rem;border-radius:100px;
-  font-size:0.85rem;font-weight:500;text-decoration:none;
-  border:1.5px solid var(--warm);display:inline-block;
-  transition:border-color 0.3s,color 0.3s;
-}
-.btn-ghost:hover{border-color:var(--ink);}
-.hero-right{
-  display:flex;align-items:center;justify-content:center;
-  position:relative;height:500px;
-}
-.hero-card-stack{position:relative;width:280px;height:380px;}
-.hero-card{
-  position:absolute;
-  background:#fff;border-radius:20px;
-  padding:2rem;
-  box-shadow:0 8px 40px rgba(45,45,42,0.08);
-}
-.hc1{width:240px;top:0;left:20px;transform:rotate(-4deg);}
-.hc2{width:260px;top:40px;left:0;transform:rotate(2deg);z-index:2;background:var(--birch);}
-.hc3{width:220px;top:20px;left:40px;transform:rotate(6deg);}
-.hc-label{font-size:0.65rem;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:var(--bark);margin-bottom:0.8rem;}
-.hc-title{font-family:'Fraunces',serif;font-size:1.2rem;font-weight:400;color:var(--ink);margin-bottom:0.5rem;}
-.hc-body{font-size:0.8rem;color:var(--slate);line-height:1.6;font-weight:300;}
-.hc-dot{width:8px;height:8px;border-radius:50%;background:var(--moss);display:inline-block;margin-right:0.4rem;}
+/* HERO — full-viewport, oversized type, morphing bg */
+#hero{min-height:100vh;display:flex;flex-direction:column;justify-content:center;position:relative;overflow:hidden;padding:8rem 4rem 4rem;}
+.hero-morph{position:absolute;width:700px;height:700px;border-radius:50%;background:radial-gradient(circle,rgba(61,92,61,.08),rgba(192,96,64,.05),rgba(192,216,232,.08));animation:morph 14s ease-in-out infinite;top:50%;left:50%;transform:translate(-20%,-50%);pointer-events:none;}
+@keyframes morph{0%,100%{border-radius:60% 40% 70% 30%/50% 60% 40% 50%;}33%{border-radius:40% 60% 30% 70%/60% 40% 70% 30%;}66%{border-radius:70% 30% 60% 40%/30% 70% 40% 60%;}}
+@keyframes floatCard{0%,100%{transform:translateY(0) rotate(var(--r,0deg))}50%{transform:translateY(-14px) rotate(var(--r,0deg))}}
+@keyframes slideIn{from{opacity:0;transform:translateX(-50px)}to{opacity:1;transform:translateX(0)}}
+@keyframes slideUp{from{opacity:0;transform:translateY(40px)}to{opacity:1;transform:translateY(0)}}
+@keyframes wordReveal{from{clip-path:inset(0 100% 0 0)}to{clip-path:inset(0 0% 0 0)}}
+@keyframes lineSlide{from{width:0}to{width:100%}}
+@keyframes spinSlow{to{transform:rotate(360deg)}}
+@keyframes ticker{from{transform:translateX(0)}to{transform:translateX(-50%)}}
 
-/* MARQUEE */
-.marquee{
-  background:var(--birch);
-  padding:0.9rem 0;overflow:hidden;white-space:nowrap;
-  border-top:1px solid var(--warm);border-bottom:1px solid var(--warm);
-}
-.marquee-inner{
-  display:inline-block;
-  animation:marquee 25s linear infinite;
-  font-size:0.75rem;font-weight:500;color:var(--bark);
-  letter-spacing:2px;text-transform:uppercase;
-}
-@keyframes marquee{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+.hero-badge{display:inline-flex;align-items:center;gap:.6rem;background:rgba(61,92,61,.1);border:1px solid rgba(61,92,61,.2);color:var(--forest2);font-size:.7rem;font-weight:700;letter-spacing:1.5px;padding:.45rem 1rem;border-radius:100px;margin-bottom:2.5rem;animation:slideIn 1s ease both .2s;}
+.hero-badge::before{content:'';width:6px;height:6px;border-radius:50%;background:var(--forest);animation:pulse 2s infinite;}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
+h1{font-family:'Libre Baskerville',serif;font-size:clamp(4.5rem,11vw,12rem);font-weight:700;line-height:.9;letter-spacing:-3px;margin-bottom:2rem;max-width:900px;}
+h1 em{font-style:italic;color:var(--clay);}
+h1 .sm{font-size:.45em;font-weight:400;font-style:italic;color:var(--bark);display:block;letter-spacing:0px;margin-top:.3em;}
+.hero-row{display:flex;justify-content:space-between;align-items:flex-end;gap:3rem;border-top:1px solid var(--warm);padding-top:2rem;animation:slideUp 1s ease both .9s;}
+.hero-desc{font-size:1.05rem;font-weight:300;color:var(--bark);max-width:460px;line-height:1.8;}
+.hero-actions{display:flex;gap:1rem;align-items:center;flex-shrink:0;}
+.btn-forest{background:var(--forest);color:#fff;padding:1rem 2.2rem;border-radius:100px;font-size:.85rem;font-weight:600;text-decoration:none;transition:background .3s,transform .3s;border:none;cursor:pointer;}
+.btn-forest:hover{background:var(--forest2);transform:translateY(-2px);}
+.btn-line{font-size:.85rem;font-weight:600;color:var(--slate);text-decoration:none;display:inline-flex;align-items:center;gap:.4rem;transition:gap .3s,color .3s;}
+.btn-line:hover{gap:.8rem;color:var(--forest);}
 
-/* PRINCIPLES */
-#principles{padding:6rem 4rem;background:var(--linen);}
-.principles-grid{
-  display:grid;grid-template-columns:repeat(3,1fr);gap:2rem;
-  max-width:1100px;margin:3rem auto 0;
-}
-.principle{
-  padding:2.5rem;
-  opacity:0;transform:translateY(24px);
-  transition:opacity 0.7s,transform 0.7s;
-}
-.principle.visible{opacity:1;transform:translateY(0);}
-.principle-icon{font-size:1.8rem;margin-bottom:1.5rem;display:block;}
-.principle-title{font-family:'Fraunces',serif;font-size:1.3rem;font-weight:400;margin-bottom:0.7rem;}
-.principle-title em{font-style:italic;color:var(--terracotta);}
-.principle-desc{font-size:0.88rem;color:var(--slate);line-height:1.75;font-weight:300;}
+/* FLOATING CARDS */
+.f-cards{position:absolute;right:5%;top:50%;transform:translateY(-50%);}
+.fcard{background:#fff;border-radius:20px;padding:1.5rem 1.8rem;box-shadow:0 10px 40px rgba(60,56,48,.08);margin-bottom:1rem;min-width:200px;}
+.fcard:nth-child(1){--r:-4deg;animation:floatCard 7s ease-in-out infinite .5s;transform:rotate(-4deg);}
+.fcard:nth-child(2){--r:3deg;animation:floatCard 7s ease-in-out infinite 2s;transform:rotate(3deg);background:var(--birch);}
+.fcard:nth-child(3){--r:-2deg;animation:floatCard 7s ease-in-out infinite 4s;transform:rotate(-2deg);}
+.fc-label{font-size:.6rem;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--bark);margin-bottom:.5rem;}
+.fc-val{font-family:'Libre Baskerville',serif;font-size:1.1rem;font-weight:400;color:var(--slate);}
+.fc-sub{font-size:.75rem;color:var(--bark);margin-top:.2rem;font-weight:300;}
+.fc-dot{display:inline-block;width:7px;height:7px;border-radius:50%;margin-right:.4rem;}
 
-/* FEATURES */
-#features{
-  padding:6rem 4rem;
-  background:var(--birch);
-}
-.features-inner{max-width:1100px;margin:0 auto;}
-.features-grid{display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;margin-top:3rem;}
-.feature-card{
-  background:var(--linen);border-radius:16px;
-  padding:2rem 2.5rem;
-  opacity:0;transform:translateY(20px);
-  transition:opacity 0.6s,transform 0.6s,box-shadow 0.3s;
-}
-.feature-card.visible{opacity:1;transform:translateY(0);}
-.feature-card:hover{box-shadow:0 12px 40px rgba(45,45,42,0.08);}
-.feature-card.wide{grid-column:span 2;}
-.fc-tag{font-size:0.65rem;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:var(--moss);margin-bottom:0.8rem;}
-.fc-title{font-family:'Fraunces',serif;font-size:1.5rem;font-weight:400;margin-bottom:0.7rem;}
-.fc-title em{font-style:italic;}
-.fc-desc{font-size:0.88rem;color:var(--slate);line-height:1.7;font-weight:300;}
-.fc-visual{margin-top:1.5rem;display:flex;gap:0.5rem;}
-.fc-dot{width:12px;height:12px;border-radius:50%;}
+/* PHILOSOPHY — full-bleed word-by-word section */
+#philosophy{background:var(--slate);color:var(--snow);padding:8rem 4rem;position:relative;overflow:hidden;}
+.phil-bg-txt{position:absolute;font-family:'Libre Baskerville',serif;font-size:clamp(10rem,20vw,22rem);font-weight:700;font-style:italic;color:rgba(250,248,244,.03);right:-2rem;bottom:-2rem;line-height:1;pointer-events:none;user-select:none;}
+.phil-grid{display:grid;grid-template-columns:1fr 1fr;gap:6rem;align-items:center;}
+.phil-left{}
+.phil-eyebrow{font-size:.7rem;font-weight:700;letter-spacing:3px;text-transform:uppercase;color:rgba(61,92,61,.8);margin-bottom:1.5rem;}
+.phil-h{font-family:'Libre Baskerville',serif;font-size:clamp(2.5rem,5vw,5.5rem);font-weight:700;line-height:1.0;letter-spacing:-1px;}
+.phil-h em{font-style:italic;color:var(--clay);}
+.phil-right{display:flex;flex-direction:column;gap:2rem;}
+.phil-item{border-left:2px solid rgba(250,248,244,.1);padding-left:2rem;opacity:0;transform:translateX(30px);transition:opacity .7s ease,transform .7s ease;}
+.phil-item.vis{opacity:1;transform:translateX(0);}
+.phil-item:hover{border-left-color:var(--clay);}
+.pi-word{font-family:'Libre Baskerville',serif;font-style:italic;font-size:1.3rem;color:var(--clay);}
+.pi-title{font-size:.9rem;font-weight:700;letter-spacing:1px;color:var(--snow);margin:.3rem 0;}
+.pi-body{font-size:.88rem;color:rgba(250,248,244,.45);line-height:1.75;font-weight:300;}
 
-/* TESTIMONIAL */
-#testimonial{padding:6rem 4rem;background:var(--linen);}
-.testi-big{
-  max-width:800px;margin:0 auto;text-align:center;
-  opacity:0;transform:translateY(30px);
-  transition:opacity 0.8s,transform 0.8s;
-}
-.testi-big.visible{opacity:1;transform:translateY(0);}
-.testi-quote{
-  font-family:'Fraunces',serif;
-  font-style:italic;font-size:clamp(1.3rem,3vw,2.2rem);
-  font-weight:300;line-height:1.5;color:var(--ink);
-  margin-bottom:2rem;
-}
-.testi-quote::before{content:'\201C';font-size:4rem;color:var(--warm);line-height:0;vertical-align:-1.5rem;margin-right:0.3rem;}
-.testi-attribution{font-size:0.8rem;color:var(--bark);font-weight:500;letter-spacing:1px;}
+/* FEATURES — horizontal strip that scrolls internally */
+#features{padding:8rem 4rem;background:var(--birch);}
+.feat-header{margin-bottom:4rem;}
+.sec-eye{font-size:.68rem;font-weight:700;letter-spacing:2.5px;text-transform:uppercase;color:var(--forest);margin-bottom:.8rem;}
+h2.sh{font-family:'Libre Baskerville',serif;font-size:clamp(2.5rem,5vw,5rem);font-weight:700;line-height:1.05;letter-spacing:-1px;}
+h2.sh em{font-style:italic;color:var(--clay);}
+.feat-strip{display:grid;grid-template-columns:repeat(4,1fr);gap:0;border:1px solid var(--warm);}
+.feat{padding:3rem 2.5rem;border-right:1px solid var(--warm);position:relative;overflow:hidden;opacity:0;transform:translateY(20px);transition:opacity .7s ease,transform .7s ease,background .3s;}
+.feat:last-child{border-right:none;}
+.feat.vis{opacity:1;transform:translateY(0);}
+.feat:hover{background:var(--snow);}
+.feat-num{font-family:'Libre Baskerville',serif;font-style:italic;font-size:3rem;font-weight:400;color:rgba(61,92,61,.1);line-height:1;margin-bottom:1.5rem;}
+.feat-icon{font-size:1.6rem;margin-bottom:1rem;}
+.feat-title{font-family:'Libre Baskerville',serif;font-size:1.2rem;margin-bottom:.8rem;letter-spacing:-.3px;}
+.feat-title em{font-style:italic;color:var(--clay);}
+.feat-body{font-size:.85rem;color:var(--bark);line-height:1.75;font-weight:300;}
 
-/* PLANS */
-#plans{padding:6rem 4rem;background:var(--birch);}
-.plans-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1.5rem;max-width:1000px;margin:3rem auto 0;}
-.plan{
-  background:var(--linen);border-radius:16px;padding:2.5rem 2rem;
-  opacity:0;transform:translateY(20px);
-  transition:opacity 0.6s,transform 0.6s;
-}
-.plan.visible{opacity:1;transform:translateY(0);}
-.plan.featured{background:var(--ink);color:var(--linen);}
-.plan-name{font-family:'Fraunces',serif;font-size:1.3rem;font-weight:400;margin-bottom:0.3rem;}
-.plan-tagline{font-size:0.8rem;color:var(--bark);margin-bottom:1.5rem;font-style:italic;}
-.plan.featured .plan-tagline{color:rgba(248,245,240,0.5);}
-.plan-price{font-family:'Fraunces',serif;font-size:2.8rem;font-weight:300;line-height:1;margin-bottom:0.3rem;}
-.plan-period{font-size:0.75rem;color:var(--bark);margin-bottom:2rem;}
-.plan.featured .plan-period{color:rgba(248,245,240,0.5);}
-.plan-features{list-style:none;display:flex;flex-direction:column;gap:0.7rem;margin-bottom:2rem;}
-.plan-features li{font-size:0.88rem;color:var(--slate);display:flex;align-items:center;gap:0.6rem;font-weight:300;}
-.plan.featured .plan-features li{color:rgba(248,245,240,0.7);}
-.plan-features li::before{content:'✓';color:var(--moss);font-size:0.75rem;flex-shrink:0;}
-.plan.featured .plan-features li::before{color:var(--sage);}
+/* QUOTE — cinematic */
+#quote{min-height:60vh;display:flex;align-items:center;justify-content:center;padding:8rem 4rem;background:var(--snow);position:relative;overflow:hidden;}
+.quote-circle{position:absolute;width:500px;height:500px;border-radius:50%;border:1px solid var(--warm);animation:spinSlow 60s linear infinite;pointer-events:none;}
+.quote-inner{text-align:center;max-width:800px;position:relative;z-index:2;opacity:0;transform:translateY(30px);transition:opacity 1s,transform 1s;}
+.quote-inner.vis{opacity:1;transform:translateY(0);}
+.q-mark{font-family:'Libre Baskerville',serif;font-size:5rem;font-weight:700;color:var(--warm);line-height:.5;display:block;margin-bottom:1.5rem;}
+.q-text{font-family:'Libre Baskerville',serif;font-style:italic;font-size:clamp(1.3rem,3vw,2.2rem);font-weight:400;line-height:1.55;color:var(--slate);}
+.q-attr{margin-top:2rem;font-size:.78rem;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--bark);}
+
+/* PRICING */
+#pricing{padding:8rem 4rem;background:var(--birch);}
+.price-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1.5rem;margin-top:4rem;}
+.pcard{background:var(--snow);border-radius:24px;padding:2.5rem 2rem;border:1.5px solid var(--warm);opacity:0;transform:translateY(25px);transition:opacity .7s ease,transform .7s ease,box-shadow .3s;}
+.pcard.vis{opacity:1;transform:translateY(0);}
+.pcard:hover{box-shadow:0 16px 48px rgba(60,56,48,.07);}
+.pcard.feat-p{background:var(--slate);color:var(--snow);border-color:var(--slate);}
+.plan-name{font-family:'Libre Baskerville',serif;font-style:italic;font-size:1.6rem;margin-bottom:.3rem;}
+.plan-tagline{font-size:.78rem;color:var(--bark);margin-bottom:1.5rem;font-weight:300;}
+.pcard.feat-p .plan-tagline{color:rgba(250,248,244,.4);}
+.plan-price{font-family:'Libre Baskerville',serif;font-size:3.5rem;font-weight:700;line-height:1;margin-bottom:.3rem;letter-spacing:-2px;}
+.plan-mo{font-size:.75rem;color:var(--bark);margin-bottom:2rem;}
+.pcard.feat-p .plan-mo{color:rgba(250,248,244,.4);}
+.plan-feats{list-style:none;display:flex;flex-direction:column;gap:.7rem;margin-bottom:2rem;}
+.plan-feats li{font-size:.88rem;color:var(--bark);display:flex;align-items:center;gap:.6rem;font-weight:300;}
+.plan-feats li::before{content:'✓';color:var(--forest);font-size:.75rem;font-weight:700;flex-shrink:0;}
+.pcard.feat-p .plan-feats li{color:rgba(250,248,244,.6);}
+.pcard.feat-p .plan-feats li::before{color:rgba(61,92,61,.8);}
+.plan-feats li.off{opacity:.3;}
+.plan-feats li.off::before{content:'—';color:var(--bark);}
 
 /* CTA */
-#cta{
-  padding:8rem 4rem;
-  background:var(--ink);text-align:center;
-  position:relative;overflow:hidden;
-}
-.cta-texture{
-  position:absolute;inset:0;
-  background:radial-gradient(ellipse at 30% 60%,rgba(122,143,114,0.15),transparent 50%),
-             radial-gradient(ellipse at 70% 30%,rgba(196,133,106,0.1),transparent 50%);
-  pointer-events:none;
-}
-#cta h2{
-  font-family:'Fraunces',serif;
-  font-size:clamp(2.5rem,6vw,6rem);
-  font-weight:300;color:var(--linen);
-  line-height:1.1;margin-bottom:1.5rem;
-  position:relative;z-index:2;
-}
-#cta h2 em{font-style:italic;color:var(--terracotta);}
-#cta p{color:rgba(248,245,240,0.5);font-size:1rem;font-weight:300;max-width:460px;margin:0 auto 3rem;line-height:1.7;position:relative;z-index:2;}
-.cta-form{
-  display:flex;gap:0.75rem;justify-content:center;flex-wrap:wrap;
-  max-width:420px;margin:0 auto;position:relative;z-index:2;
-}
-.cta-email{
-  flex:1;min-width:200px;background:rgba(255,255,255,0.06);
-  border:1px solid rgba(255,255,255,0.12);color:var(--linen);
-  padding:0.9rem 1.3rem;border-radius:100px;
-  font-family:'DM Sans',sans-serif;font-size:0.9rem;outline:none;
-  transition:border-color 0.3s;
-}
-.cta-email::placeholder{color:rgba(248,245,240,0.3);}
-.cta-email:focus{border-color:var(--moss);}
-.cta-submit{
-  background:var(--moss);color:#fff;
-  padding:0.9rem 1.8rem;border-radius:100px;
-  border:none;font-family:'DM Sans',sans-serif;
-  font-size:0.85rem;font-weight:600;cursor:pointer;
-  transition:filter 0.3s,transform 0.3s;
-}
-.cta-submit:hover{filter:brightness(1.15);transform:scale(1.03);}
+#cta{padding:10rem 4rem;background:var(--snow);text-align:center;position:relative;overflow:hidden;}
+.cta-shape{position:absolute;width:600px;height:600px;border-radius:50%;background:radial-gradient(circle,rgba(61,92,61,.05),transparent 60%);top:50%;left:50%;transform:translate(-50%,-50%);animation:morph 16s ease-in-out infinite;pointer-events:none;}
+#cta h2{font-family:'Libre Baskerville',serif;font-size:clamp(3.5rem,9vw,10rem);font-weight:700;line-height:.9;letter-spacing:-3px;margin-bottom:1.5rem;position:relative;z-index:2;}
+#cta h2 em{font-style:italic;color:var(--clay);}
+#cta p{font-size:1.05rem;font-weight:300;color:var(--bark);max-width:460px;margin:0 auto 3.5rem;line-height:1.8;position:relative;z-index:2;}
+.cf{display:flex;gap:.6rem;max-width:420px;margin:0 auto;position:relative;z-index:2;}
+.cf-email{flex:1;background:var(--birch);border:1.5px solid var(--warm);color:var(--slate);padding:.95rem 1.3rem;border-radius:100px;font-family:'Nunito',sans-serif;font-size:.9rem;outline:none;transition:border-color .3s;}
+.cf-email:focus{border-color:var(--forest);}
+.cf-email::placeholder{color:var(--bark);}
+.cf-go{background:var(--forest);color:#fff;padding:.95rem 1.8rem;border-radius:100px;border:none;font-family:'Nunito',sans-serif;font-size:.85rem;font-weight:700;cursor:pointer;transition:background .3s,transform .3s;}
+.cf-go:hover{background:var(--forest2);transform:scale(1.03);}
+#cfOk{display:none;color:var(--forest);font-weight:700;margin-top:1.5rem;font-size:.95rem;position:relative;z-index:2;}
 
-/* FOOTER */
-footer{
-  background:var(--ink);padding:2rem 4rem;
-  display:flex;justify-content:space-between;align-items:center;
-  border-top:1px solid rgba(255,255,255,0.05);
-}
-.footer-ro{font-family:'Fraunces',serif;font-style:italic;font-size:1.2rem;color:rgba(248,245,240,0.5);}
-footer p{font-size:0.75rem;color:rgba(248,245,240,0.25);}
-.footer-tag{font-size:0.65rem;color:var(--moss);}
+footer{background:var(--slate);padding:2rem 4rem;display:flex;justify-content:space-between;align-items:center;}
+.f-ro{font-family:'Libre Baskerville',serif;font-style:italic;font-size:1.3rem;color:rgba(250,248,244,.4);}
+footer p{font-size:.75rem;color:rgba(250,248,244,.2);}
+.f-back{font-size:.72rem;color:rgba(61,92,61,.6);text-decoration:none;font-weight:600;transition:color .3s;}
+.f-back:hover{color:rgba(61,92,61,1);}
 
-/* SECTION LABELS */
-.section-eyebrow{display:block;font-size:0.7rem;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:var(--moss);margin-bottom:1rem;}
-h2.sec-h2{font-family:'Fraunces',serif;font-size:clamp(2.5rem,5vw,4.5rem);font-weight:300;line-height:1.1;}
-h2.sec-h2 em{font-style:italic;color:var(--terracotta);}
+/* PLAN BUTTONS */
+.plan-btn{display:block;text-align:center;padding:.9rem;border-radius:100px;text-decoration:none;font-size:.85rem;font-weight:700;transition:.3s;}
+.plan-btn-light{border:1.5px solid var(--warm);color:var(--slate);}
+.plan-btn-light:hover{border-color:var(--forest);color:var(--forest);}
+.plan-btn-dark{background:var(--forest);color:#fff;}
+.plan-btn-dark:hover{background:var(--forest2);}
 
 @media(max-width:900px){
   nav{padding:1rem 1.5rem;}
   .nav-links{display:none;}
-  #hero{grid-template-columns:1fr;padding:6rem 1.5rem 3rem;}
-  .hero-right{display:none;}
-  .principles-grid,.features-grid,.plans-grid{grid-template-columns:1fr;}
-  .feature-card.wide{grid-column:span 1;}
-  section{padding:4rem 1.5rem;}
-  footer{flex-direction:column;gap:0.5rem;text-align:center;padding:1.5rem;}
+  #hero{padding:7rem 1.5rem 3rem;}
+  .hero-row{flex-direction:column;align-items:flex-start;}
+  .f-cards{display:none;}
+  .phil-grid{grid-template-columns:1fr;}
+  .feat-strip{grid-template-columns:1fr 1fr;}
+  .price-grid{grid-template-columns:1fr;}
+  #philosophy,#features,#quote,#pricing,#cta{padding:5rem 1.5rem;}
+  footer{flex-direction:column;gap:1rem;padding:2rem 1.5rem;text-align:center;}
 }
 </style>
 </head>
 <body>
-
-<nav id="navbar">
-  <div class="nav-logo"><em>Ro</em></div>
+<div id="sp"></div>
+<nav id="nav">
+  <div class="nav-brand"><em>Ro</em>.</div>
   <ul class="nav-links">
-    <li><a href="#principles">Philosophy</a></li>
+    <li><a href="#philosophy">Philosophy</a></li>
     <li><a href="#features">Features</a></li>
-    <li><a href="#plans">Plans</a></li>
+    <li><a href="#pricing">Pricing</a></li>
   </ul>
-  <a href="#cta" class="nav-start">Begin Your Practice</a>
+  <a href="#cta" class="nav-cta">Begin Practice</a>
 </nav>
 
-<!-- HERO -->
 <section id="hero">
-  <div class="hero-left">
-    <div class="hero-season">Mindful Productivity — Designed for Humans</div>
-    <h1>Work with<br><em>intention.</em><br>Rest with<br>purpose.</h1>
-    <p class="hero-body">Ro is a calm productivity system that helps you do less, better. No noise. No hustle culture. Just thoughtful tools for a life well-lived.</p>
-    <div class="hero-btns">
-      <a href="#cta" class="btn-ink">Try Free for 14 Days</a>
-      <a href="#principles" class="btn-ghost">Our Philosophy</a>
+  <div class="hero-morph"></div>
+  <div class="hero-badge">Mindful Productivity — Designed for Humans</div>
+  <h1>Work with<br><em>intention.</em><br><span class="sm">rest without guilt.</span></h1>
+  <div class="hero-row">
+    <p class="hero-desc">Ro is a calm productivity system that helps you do less, better. No hustle culture, no anxiety — just thoughtful tools for a life that actually feels good to live.</p>
+    <div class="hero-actions">
+      <a href="#cta" class="btn-forest">Try Free 14 Days</a>
+      <a href="#philosophy" class="btn-line">Philosophy →</a>
     </div>
   </div>
-  <div class="hero-right">
-    <div class="hero-card-stack">
-      <div class="hero-card hc3">
-        <div class="hc-label">Evening</div>
-        <div class="hc-title">Wind Down</div>
-        <p class="hc-body">Reflect on 3 things you completed today.</p>
+  <div class="f-cards">
+    <div class="fcard"><div class="fc-label">Morning Ritual</div><div class="fc-val">Set Your Intention</div><div class="fc-sub">What matters most today?</div></div>
+    <div class="fcard"><div class="fc-label"><span class="fc-dot" style="background:var(--forest)"></span>Focus Block</div><div class="fc-val">Deep Work · 90 min</div><div class="fc-sub">No interruptions. Just flow.</div></div>
+    <div class="fcard"><div class="fc-label">Evening Wind-Down</div><div class="fc-val">Reflect & Release</div><div class="fc-sub">3 things you completed.</div></div>
+  </div>
+</section>
+
+<section id="philosophy">
+  <div class="phil-bg-txt">Ro</div>
+  <div class="phil-grid">
+    <div class="phil-left">
+      <div class="phil-eyebrow">Our Philosophy</div>
+      <h2 class="phil-h" style="color:var(--snow);">Rooted in<br><em>what matters.</em></h2>
+    </div>
+    <div class="phil-right">
+      <div class="phil-item">
+        <div class="pi-word">Lagom</div>
+        <div class="pi-title">Just Enough</div>
+        <p class="pi-body">Not too much, not too little. Ro finds your productive sweet spot — where effort meets ease.</p>
       </div>
-      <div class="hero-card hc1">
-        <div class="hc-label">Morning Ritual</div>
-        <div class="hc-title">Set Your Intention</div>
-        <p class="hc-body">What is the one thing that would make today meaningful?</p>
+      <div class="phil-item" style="transition-delay:.12s">
+        <div class="pi-word">Hygge</div>
+        <div class="pi-title">Coziness of Mind</div>
+        <p class="pi-body">Your digital workspace should feel like a sanctuary, not a factory floor.</p>
       </div>
-      <div class="hero-card hc2">
-        <div class="hc-label"><span class="hc-dot"></span>Focus Block</div>
-        <div class="hc-title">Deep Work · 90 min</div>
-        <p class="hc-body">No notifications. No interruptions. Just you and the work.</p>
+      <div class="phil-item" style="transition-delay:.24s">
+        <div class="pi-word">Flöde</div>
+        <div class="pi-title">Natural Flow</div>
+        <p class="pi-body">Ro works with your energy cycles — protecting deep work and honoring genuine rest.</p>
+      </div>
+      <div class="phil-item" style="transition-delay:.36s">
+        <div class="pi-word">Stillhet</div>
+        <div class="pi-title">Stillness</div>
+        <p class="pi-body">The space between tasks is not wasted time. It's where your best thinking lives.</p>
       </div>
     </div>
   </div>
 </section>
 
-<div class="marquee">
-  <span class="marquee-inner">
-    🌿 Clarity &nbsp;&nbsp;·&nbsp;&nbsp; Stillness &nbsp;&nbsp;·&nbsp;&nbsp; Deep Work &nbsp;&nbsp;·&nbsp;&nbsp; Rest as Resistance &nbsp;&nbsp;·&nbsp;&nbsp; Intentional Living &nbsp;&nbsp;·&nbsp;&nbsp; Slow Productivity &nbsp;&nbsp;·&nbsp;&nbsp; Presence &nbsp;&nbsp;·&nbsp;&nbsp; Balance &nbsp;&nbsp;·&nbsp;&nbsp; Hygge &nbsp;&nbsp;·&nbsp;&nbsp; Simplicity &nbsp;&nbsp;·&nbsp;&nbsp;
-    🌿 Clarity &nbsp;&nbsp;·&nbsp;&nbsp; Stillness &nbsp;&nbsp;·&nbsp;&nbsp; Deep Work &nbsp;&nbsp;·&nbsp;&nbsp; Rest as Resistance &nbsp;&nbsp;·&nbsp;&nbsp; Intentional Living &nbsp;&nbsp;·&nbsp;&nbsp; Slow Productivity &nbsp;&nbsp;·&nbsp;&nbsp; Presence &nbsp;&nbsp;·&nbsp;&nbsp; Balance &nbsp;&nbsp;·&nbsp;&nbsp; Hygge &nbsp;&nbsp;·&nbsp;&nbsp; Simplicity &nbsp;&nbsp;·&nbsp;&nbsp;
-  </span>
-</div>
-
-<!-- PRINCIPLES -->
-<section id="principles">
-  <div style="max-width:600px;margin:0 auto 1rem;">
-    <span class="section-eyebrow">Our Philosophy</span>
-    <h2 class="sec-h2">Rooted in<br><em>what matters.</em></h2>
-  </div>
-  <div class="principles-grid">
-    <div class="principle">
-      <span class="principle-icon">🌿</span>
-      <div class="principle-title"><em>Lagom</em> — Just Enough</div>
-      <p class="principle-desc">Not too much, not too little. Ro helps you find the productive sweet spot where effort meets ease, and where you sustainably do your best work.</p>
-    </div>
-    <div class="principle" style="transition-delay:0.12s">
-      <span class="principle-icon">🕯</span>
-      <div class="principle-title"><em>Hygge</em> — Coziness of Mind</div>
-      <p class="principle-desc">Your workspace should feel like a sanctuary. We design our tools to be warm, inviting, and free of the anxiety that most productivity apps create.</p>
-    </div>
-    <div class="principle" style="transition-delay:0.24s">
-      <span class="principle-icon">🌊</span>
-      <div class="principle-title"><em>Flow</em> — Natural Rhythm</div>
-      <p class="principle-desc">Real productivity isn't forced. Ro works with your natural energy cycles — protecting deep work time and honoring genuine rest without guilt.</p>
-    </div>
-  </div>
-</section>
-
-<!-- FEATURES -->
 <section id="features">
-  <div class="features-inner">
-    <span class="section-eyebrow">What Ro Does</span>
-    <h2 class="sec-h2">Tools that feel<br><em>like home.</em></h2>
-    <div class="features-grid">
-      <div class="feature-card">
-        <div class="fc-tag">Daily Anchor</div>
-        <div class="fc-title">Morning & Evening <em>Rituals</em></div>
-        <p class="fc-desc">Gentle guided prompts that start your day with clarity and close it with reflection — never overwhelm.</p>
-        <div class="fc-visual">
-          <div class="fc-dot" style="background:#a8c4a2"></div>
-          <div class="fc-dot" style="background:#c4856a"></div>
-          <div class="fc-dot" style="background:#b8d4e0"></div>
-        </div>
-      </div>
-      <div class="feature-card" style="transition-delay:0.1s">
-        <div class="fc-tag">Deep Focus</div>
-        <div class="fc-title">Protected <em>Work Blocks</em></div>
-        <p class="fc-desc">Time-blocked focus sessions that silence everything else. Your most important work, shielded from distraction.</p>
-        <div class="fc-visual">
-          <div class="fc-dot" style="background:#7a8f72;width:32px;border-radius:6px"></div>
-          <div class="fc-dot" style="background:#c2b5a0;width:20px;border-radius:6px"></div>
-        </div>
-      </div>
-      <div class="feature-card wide" style="transition-delay:0.2s">
-        <div class="fc-tag">Life View</div>
-        <div class="fc-title">The <em>Weekly Landscape</em></div>
-        <p class="fc-desc">A bird's-eye view of your week — work, rest, connection, and personal projects — in one beautiful, spacious layout. Not a task list. A life layout. Designed to remind you why you work, not just what to do next.</p>
-        <div class="fc-visual" style="margin-top:1.5rem;gap:0.4rem;flex-wrap:wrap;">
-          <div class="fc-dot" style="background:#a8c4a2;width:80px;height:16px;border-radius:8px"></div>
-          <div class="fc-dot" style="background:#c4856a;width:50px;height:16px;border-radius:8px"></div>
-          <div class="fc-dot" style="background:#b8d4e0;width:100px;height:16px;border-radius:8px"></div>
-          <div class="fc-dot" style="background:#c2b5a0;width:40px;height:16px;border-radius:8px"></div>
-        </div>
-      </div>
-    </div>
+  <div class="feat-header">
+    <div class="sec-eye">What Ro Does</div>
+    <h2 class="sh">Tools that feel<br><em>like home.</em></h2>
+  </div>
+  <div class="feat-strip">
+    <div class="feat"><div class="feat-num">01</div><div class="feat-icon">🕯</div><div class="feat-title">Morning &amp; Evening <em>Rituals</em></div><p class="feat-body">Gentle guided prompts that open your day with clarity and close it with reflection. Two minutes, twice a day.</p></div>
+    <div class="feat" style="transition-delay:.12s"><div class="feat-num">02</div><div class="feat-icon">🌿</div><div class="feat-title">Protected <em>Focus Blocks</em></div><p class="feat-body">Time-blocked sessions that silence everything else. Deep work, made effortlessly accessible.</p></div>
+    <div class="feat" style="transition-delay:.24s"><div class="feat-num">03</div><div class="feat-icon">🗓</div><div class="feat-title">Weekly <em>Landscape</em></div><p class="feat-body">A bird's-eye view of your week — work, rest, and connection — in one beautiful, spacious layout.</p></div>
+    <div class="feat" style="transition-delay:.36s"><div class="feat-num">04</div><div class="feat-icon">🌙</div><div class="feat-title"><em>Rest Mode</em></div><p class="feat-body">One button that tells Ro you're done. No notifications until you decide you're ready. Zero guilt.</p></div>
   </div>
 </section>
 
-<!-- TESTIMONIAL -->
-<section id="testimonial">
-  <div class="testi-big">
-    <p class="testi-quote">I've tried every productivity app. Ro is the first one that made me feel like a person instead of a machine. I work less and accomplish more. That used to sound impossible.</p>
-    <div class="testi-attribution">— Sofie K., Architect & Mother of Two · Copenhagen</div>
+<section id="quote">
+  <div class="quote-circle"></div>
+  <div class="quote-inner">
+    <span class="q-mark">"</span>
+    <p class="q-text">I've tried every productivity app. Ro is the first one that made me feel like a person instead of a machine. I work less and accomplish more. That used to sound impossible.</p>
+    <div class="q-attr">— Sofie K., Architect · Copenhagen, Denmark</div>
   </div>
 </section>
 
-<!-- PLANS -->
-<section id="plans">
-  <div style="text-align:center;max-width:500px;margin:0 auto;">
-    <span class="section-eyebrow">Simple Pricing</span>
-    <h2 class="sec-h2">Honest, <em>transparent</em> plans.</h2>
-  </div>
-  <div class="plans-grid">
-    <div class="plan">
+<section id="pricing">
+  <div class="sec-eye">Simple Pricing</div>
+  <h2 class="sh" style="margin-top:.6rem;">Honest,<br><em>transparent</em> plans.</h2>
+  <div class="price-grid">
+    <div class="pcard">
       <div class="plan-name">Still</div>
       <div class="plan-tagline">For the curious</div>
       <div class="plan-price">Free</div>
-      <div class="plan-period">forever</div>
-      <ul class="plan-features">
-        <li>Daily rituals</li>
-        <li>3 focus blocks / week</li>
-        <li>Weekly reflection</li>
-      </ul>
-      <a href="#cta" class="btn-ghost" style="display:block;text-align:center;border-color:var(--warm)">Start Free</a>
+      <div class="plan-mo">forever</div>
+      <ul class="plan-feats"><li>Daily rituals</li><li>3 focus blocks / week</li><li>Weekly reflection</li><li class="off">Unlimited focus</li><li class="off">Rest mode</li></ul>
+      <a href="#cta" class="plan-btn plan-btn-light">Start Free</a>
     </div>
-    <div class="plan featured">
+    <div class="pcard feat-p" style="transition-delay:.12s">
       <div class="plan-name">Flow</div>
       <div class="plan-tagline">For the committed</div>
       <div class="plan-price">$9</div>
-      <div class="plan-period">per month</div>
-      <ul class="plan-features">
-        <li>Everything in Still</li>
-        <li>Unlimited focus blocks</li>
-        <li>Weekly landscape view</li>
-        <li>Energy tracking</li>
-        <li>Rest mode</li>
-      </ul>
-      <a href="#cta" class="btn-ink" style="display:block;text-align:center;background:var(--moss)">Begin Your Flow</a>
+      <div class="plan-mo">per month</div>
+      <ul class="plan-feats"><li>Everything in Still</li><li>Unlimited focus blocks</li><li>Weekly landscape</li><li>Energy tracking</li><li>Rest mode</li></ul>
+      <a href="#cta" class="plan-btn plan-btn-dark" style="background:var(--forest);">Begin Your Flow</a>
     </div>
-    <div class="plan">
+    <div class="pcard" style="transition-delay:.24s">
       <div class="plan-name">Rooted</div>
-      <div class="plan-tagline">For the whole team</div>
+      <div class="plan-tagline">For teams</div>
       <div class="plan-price">$6</div>
-      <div class="plan-period">per seat / month</div>
-      <ul class="plan-features">
-        <li>Everything in Flow</li>
-        <li>Team rituals</li>
-        <li>Shared focus sessions</li>
-        <li>Manager wellness view</li>
-      </ul>
-      <a href="#cta" class="btn-ghost" style="display:block;text-align:center">Talk to Us</a>
+      <div class="plan-mo">per seat / month</div>
+      <ul class="plan-feats"><li>Everything in Flow</li><li>Team rituals</li><li>Shared focus sessions</li><li>Manager wellness view</li><li>Priority support</li></ul>
+      <a href="#cta" class="plan-btn plan-btn-light">Talk to Us</a>
     </div>
   </div>
 </section>
 
-<!-- CTA -->
 <section id="cta">
-  <div class="cta-texture"></div>
-  <span class="section-eyebrow" style="position:relative;z-index:2;color:var(--moss)">Begin Gently</span>
-  <h2 style="position:relative;z-index:2;">Your best work<br>starts with <em>rest.</em></h2>
-  <p style="position:relative;z-index:2;">Try Ro free for 14 days. No credit card. No pressure. Just space to breathe.</p>
-  <div class="cta-form">
-    <input class="cta-email" type="email" placeholder="your@email.com" id="ctaEmail">
-    <button class="cta-submit" onclick="handleCTA()">Begin →</button>
+  <div class="cta-shape"></div>
+  <h2>Your best work<br>starts with <em>rest.</em></h2>
+  <p>Try Ro free for 14 days. No credit card. No pressure. Just space to breathe.</p>
+  <div class="cf">
+    <input class="cf-email" id="cfEmail" type="email" placeholder="your@email.com">
+    <button class="cf-go" onclick="doCta()">Begin →</button>
   </div>
-  <p id="ctaThanks" style="display:none;color:var(--sage);margin-top:1.5rem;font-weight:500;position:relative;z-index:2;">✓ Welcome. Check your inbox.</p>
+  <p id="cfOk">✓ Welcome to Ro. Check your inbox.</p>
 </section>
 
 <footer>
-  <div class="footer-ro">Ro.</div>
-  <p>© 2026 Ro Inc. All rights reserved.</p>
-  <div class="footer-tag">Website by Ozan Sahin Web Design</div>
+  <div class="f-ro">Ro.</div>
+  <p>© 2026 Ro Inc. · Fictitious Sample Site</p>
+  <a href="index.html" class="f-back">← Back to Portfolio</a>
 </footer>
 
 <script>
-const nav=document.getElementById('navbar');
-window.addEventListener('scroll',()=>nav.classList.toggle('scrolled',scrollY>60));
-const obs=new IntersectionObserver(e=>e.forEach(x=>{if(x.isIntersecting)x.target.classList.add('visible')}),{threshold:0.1});
-document.querySelectorAll('.principle,.feature-card,.plan,.testi-big').forEach(el=>obs.observe(el));
-function handleCTA(){
-  const v=document.getElementById('ctaEmail').value;
-  if(v.includes('@')){document.querySelector('.cta-form').style.display='none';document.getElementById('ctaThanks').style.display='block';}
-}
+window.addEventListener('scroll',()=>{
+  document.getElementById('sp').style.width=(scrollY/(document.body.scrollHeight-innerHeight)*100)+'%';
+  document.getElementById('nav').classList.toggle('on',scrollY>60);
+});
+const io=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting)e.target.classList.add('vis');}),{threshold:.12});
+document.querySelectorAll('.phil-item,.feat,.pcard,.quote-inner').forEach(el=>io.observe(el));
+function doCta(){if(document.getElementById('cfEmail').value.includes('@')){document.querySelector('.cf').style.display='none';document.getElementById('cfOk').style.display='block';}}
 </script>
 </body>
 </html>
