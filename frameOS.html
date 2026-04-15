@@ -1,0 +1,2519 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>FrameOS — Premium Fictitious Landing Page</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #ffffff;
+      --fg: #111827;
+      --primary: #3B82F6;
+      --primary-dark: #2563EB;
+      --secondary: #10B981;
+      --accent: #F59E0B;
+      --muted: #F3F4F6;
+      --muted-2: #E5E7EB;
+      --border: #E5E7EB;
+      --dark: #111827;
+      --dark-2: #1f2937;
+      --radius-md: 8px;
+      --radius-lg: 10px;
+      --container: 1220px;
+      --transition-fast: 180ms ease;
+      --transition-mid: 260ms cubic-bezier(.2,.8,.2,1);
+      --section-pad: 108px;
+      --cursor-x: 50vw;
+      --cursor-y: 50vh;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      font-family: 'Outfit', sans-serif;
+      background: var(--bg);
+      color: var(--fg);
+      overflow-x: hidden;
+      cursor: none;
+    }
+
+    a, button, .feature-card, .price-card, .os-sidebar-item, .chip, .dock-item, .mini-link {
+      cursor: none;
+    }
+
+    ::selection {
+      background: var(--primary);
+      color: white;
+    }
+
+    .cursor {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      background: var(--fg);
+      transform: translate(-50%, -50%);
+      pointer-events: none;
+      z-index: 1000;
+      transition: width 160ms ease, height 160ms ease, background 160ms ease, opacity 160ms ease;
+      mix-blend-mode: difference;
+    }
+
+    .cursor-ring {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 48px;
+      height: 48px;
+      border: 2px solid var(--fg);
+      border-radius: 50%;
+      transform: translate(-50%, -50%);
+      pointer-events: none;
+      z-index: 999;
+      transition: width 220ms ease, height 220ms ease, border-color 180ms ease, opacity 180ms ease;
+      opacity: .55;
+    }
+
+    body.cursor-active .cursor {
+      width: 30px;
+      height: 30px;
+      background: var(--primary);
+    }
+
+    body.cursor-active .cursor-ring {
+      width: 72px;
+      height: 72px;
+      border-color: var(--primary);
+      opacity: .85;
+    }
+
+    .page-noise {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      background-image:
+        linear-gradient(to right, rgba(17,24,39,0.02) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(17,24,39,0.02) 1px, transparent 1px);
+      background-size: 32px 32px;
+      z-index: -1;
+    }
+
+    .spotlight {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: -1;
+      background:
+        radial-gradient(circle 280px at var(--cursor-x) var(--cursor-y), rgba(59,130,246,0.08), transparent 60%);
+    }
+
+    .container {
+      width: min(var(--container), calc(100% - 40px));
+      margin: 0 auto;
+    }
+
+    .section {
+      padding: var(--section-pad) 0;
+      position: relative;
+      overflow: clip;
+    }
+
+    .section-label {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 14px;
+      background: rgba(255,255,255,0.14);
+      color: inherit;
+      border-radius: 999px;
+      font-size: 13px;
+      letter-spacing: .14em;
+      text-transform: uppercase;
+      font-weight: 700;
+    }
+
+    .section-label.light {
+      background: var(--muted);
+    }
+
+    .section-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: end;
+      gap: 24px;
+      margin-bottom: 36px;
+    }
+
+    .section-head h2 {
+      font-size: clamp(2.1rem, 4vw, 4rem);
+      line-height: 0.96;
+      letter-spacing: -0.04em;
+      font-weight: 800;
+      max-width: 760px;
+    }
+
+    .section-head p {
+      max-width: 420px;
+      font-size: 18px;
+      line-height: 1.65;
+      color: rgba(17,24,39,0.78);
+    }
+
+    .nav {
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      backdrop-filter: none;
+      background: rgba(255,255,255,0.96);
+      border-bottom: 2px solid transparent;
+      transition: border-color var(--transition-fast), transform var(--transition-fast);
+    }
+
+    .nav.scrolled {
+      border-color: var(--muted-2);
+    }
+
+    .nav-inner {
+      min-height: 82px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 20px;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      font-weight: 800;
+      letter-spacing: -0.03em;
+      font-size: 24px;
+      text-decoration: none;
+      color: var(--fg);
+    }
+
+    .brand-mark {
+      width: 18px;
+      height: 18px;
+      background: var(--primary);
+      transform: rotate(45deg);
+      border-radius: 2px;
+    }
+
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .nav-links a {
+      text-decoration: none;
+      color: var(--fg);
+      font-weight: 600;
+      font-size: 15px;
+      padding: 12px 14px;
+      border-radius: var(--radius-md);
+      transition: transform var(--transition-fast), background var(--transition-fast), color var(--transition-fast);
+    }
+
+    .nav-links a:hover,
+    .nav-links a:focus-visible {
+      background: var(--muted);
+      transform: scale(1.04);
+      outline: none;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      min-height: 58px;
+      padding: 0 24px;
+      border-radius: var(--radius-md);
+      text-decoration: none;
+      font-weight: 700;
+      font-size: 15px;
+      letter-spacing: 0.01em;
+      border: none;
+      transition: transform var(--transition-fast), background var(--transition-fast), color var(--transition-fast);
+      user-select: none;
+    }
+
+    .btn:focus-visible,
+    button:focus-visible,
+    .feature-card:focus-visible,
+    .price-card:focus-visible,
+    .faq-item summary:focus-visible,
+    .dock-item:focus-visible,
+    .os-sidebar-item:focus-visible {
+      outline: 3px solid var(--primary);
+      outline-offset: 3px;
+    }
+
+    .btn-primary {
+      background: var(--primary);
+      color: white;
+    }
+
+    .btn-primary:hover {
+      background: var(--primary-dark);
+      transform: scale(1.05);
+    }
+
+    .btn-secondary {
+      background: var(--muted);
+      color: var(--fg);
+    }
+
+    .btn-secondary:hover {
+      background: #e7e9ee;
+      transform: scale(1.05);
+    }
+
+    .btn-outline {
+      background: transparent;
+      color: var(--fg);
+      border: 4px solid var(--fg);
+    }
+
+    .btn-outline:hover {
+      background: var(--fg);
+      color: white;
+      transform: scale(1.05);
+    }
+
+    .hero {
+      background: var(--primary);
+      color: white;
+      min-height: calc(100vh - 82px);
+      display: grid;
+      align-items: center;
+      position: relative;
+    }
+
+    .hero-grid {
+      display: grid;
+      grid-template-columns: 1.04fr 0.96fr;
+      gap: 42px;
+      align-items: center;
+      min-height: calc(100vh - 82px);
+      padding: 48px 0 56px;
+    }
+
+    .hero-copy {
+      position: relative;
+      z-index: 3;
+    }
+
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 14px;
+      border-radius: 999px;
+      background: rgba(255,255,255,0.14);
+      font-weight: 700;
+      font-size: 13px;
+      letter-spacing: .14em;
+      text-transform: uppercase;
+      margin-bottom: 24px;
+    }
+
+    .hero h1 {
+      font-size: clamp(3.7rem, 7vw, 7.2rem);
+      line-height: 0.9;
+      letter-spacing: -0.055em;
+      font-weight: 800;
+      max-width: 760px;
+    }
+
+    .hero h1 span {
+      color: #dbeafe;
+      display: block;
+    }
+
+    .hero p {
+      max-width: 620px;
+      margin-top: 26px;
+      font-size: clamp(1.05rem, 1.2vw, 1.22rem);
+      line-height: 1.7;
+      color: rgba(255,255,255,0.92);
+    }
+
+    .hero-actions {
+      display: flex;
+      gap: 14px;
+      flex-wrap: wrap;
+      margin-top: 30px;
+    }
+
+    .hero-metrics {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 16px;
+      margin-top: 44px;
+      max-width: 660px;
+    }
+
+    .metric {
+      background: rgba(255,255,255,0.12);
+      padding: 20px;
+      border-radius: var(--radius-lg);
+      transition: transform var(--transition-fast), background var(--transition-fast);
+    }
+
+    .metric:hover {
+      transform: scale(1.03);
+      background: rgba(255,255,255,0.17);
+    }
+
+    .metric strong {
+      display: block;
+      font-size: clamp(1.6rem, 2vw, 2.3rem);
+      line-height: 1;
+      font-weight: 800;
+    }
+
+    .metric span {
+      display: block;
+      margin-top: 8px;
+      font-size: 14px;
+      color: rgba(255,255,255,0.82);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+
+    .hero-shape,
+    .hero-shape-2,
+    .hero-shape-3,
+    .hero-shape-4 {
+      position: absolute;
+      background: rgba(255,255,255,0.08);
+      pointer-events: none;
+      z-index: 1;
+    }
+
+    .hero-shape {
+      width: 360px;
+      height: 360px;
+      border-radius: 50%;
+      top: -110px;
+      right: -90px;
+    }
+
+    .hero-shape-2 {
+      width: 210px;
+      height: 210px;
+      transform: rotate(45deg);
+      left: -80px;
+      bottom: 18%;
+      border-radius: 10px;
+    }
+
+    .hero-shape-3 {
+      width: 160px;
+      height: 16px;
+      right: 22%;
+      top: 24%;
+      transform: rotate(32deg);
+      border-radius: 999px;
+    }
+
+    .hero-shape-4 {
+      width: 120px;
+      height: 120px;
+      right: 8%;
+      bottom: 12%;
+      border-radius: 24px;
+      transform: rotate(18deg);
+    }
+
+    .hero-ui-wrap {
+      position: relative;
+      z-index: 3;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      perspective: 1800px;
+    }
+
+    .ui-orbit {
+      position: absolute;
+      inset: auto;
+      width: 540px;
+      height: 540px;
+      border: 2px dashed rgba(255,255,255,0.14);
+      border-radius: 50%;
+      animation: spin 26s linear infinite;
+      pointer-events: none;
+    }
+
+    .ui-orbit::before,
+    .ui-orbit::after {
+      content: "";
+      position: absolute;
+      width: 22px;
+      height: 22px;
+      border-radius: 50%;
+      background: white;
+      opacity: 0.15;
+    }
+
+    .ui-orbit::before {
+      top: 8%;
+      left: 18%;
+    }
+
+    .ui-orbit::after {
+      right: 10%;
+      bottom: 18%;
+    }
+
+    .hero-ui {
+      width: min(100%, 590px);
+      background: #f8fafc;
+      color: var(--fg);
+      border-radius: 18px;
+      overflow: hidden;
+      transform: rotateY(-14deg) rotateX(8deg) translateY(12px);
+      transition: transform 260ms ease;
+      border: 2px solid rgba(255,255,255,0.35);
+    }
+
+    .hero-ui:hover {
+      transform: rotateY(-8deg) rotateX(4deg) translateY(0px) scale(1.01);
+    }
+
+    .os-bar {
+      height: 52px;
+      background: #e5e7eb;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 16px;
+      border-bottom: 2px solid #d1d5db;
+    }
+
+    .os-dots {
+      display: flex;
+      gap: 8px;
+    }
+
+    .os-dots span {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      background: #94a3b8;
+    }
+
+    .os-dots span:nth-child(1) { background: #3B82F6; }
+    .os-dots span:nth-child(2) { background: #10B981; }
+    .os-dots span:nth-child(3) { background: #F59E0B; }
+
+    .os-title {
+      font-weight: 700;
+      font-size: 14px;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+      color: #334155;
+    }
+
+    .os-shell {
+      display: grid;
+      grid-template-columns: 96px 1fr 178px;
+      min-height: 470px;
+      background: white;
+    }
+
+    .os-sidebar {
+      background: #eef2ff;
+      border-right: 2px solid #e5e7eb;
+      padding: 18px 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .os-sidebar-item {
+      border: none;
+      background: white;
+      color: var(--fg);
+      min-height: 54px;
+      border-radius: 12px;
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+      transition: transform var(--transition-fast), background var(--transition-fast), color var(--transition-fast);
+    }
+
+    .os-sidebar-item:hover,
+    .os-sidebar-item.active {
+      transform: scale(1.04);
+      background: var(--primary);
+      color: white;
+    }
+
+    .os-main {
+      padding: 20px;
+      display: grid;
+      gap: 18px;
+      align-content: start;
+      background: #ffffff;
+    }
+
+    .os-breadcrumb {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .chip-row {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .chip {
+      border: none;
+      padding: 10px 14px;
+      border-radius: 999px;
+      background: var(--muted);
+      color: var(--fg);
+      font-weight: 700;
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: .08em;
+      transition: transform var(--transition-fast), background var(--transition-fast), color var(--transition-fast);
+    }
+
+    .chip:hover,
+    .chip.active {
+      transform: scale(1.04);
+      background: var(--fg);
+      color: white;
+    }
+
+    .os-grid {
+      display: grid;
+      grid-template-columns: 1.25fr .75fr;
+      gap: 16px;
+    }
+
+    .panel {
+      background: var(--muted);
+      border-radius: 16px;
+      padding: 18px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .panel-title {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 16px;
+    }
+
+    .panel-title h3 {
+      font-size: 18px;
+      letter-spacing: -0.03em;
+    }
+
+    .panel-tag {
+      padding: 8px 10px;
+      background: white;
+      border-radius: 999px;
+      font-size: 11px;
+      font-weight: 800;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+    }
+
+    .graph {
+      height: 210px;
+      display: flex;
+      align-items: end;
+      gap: 12px;
+      padding-top: 18px;
+    }
+
+    .bar {
+      flex: 1;
+      background: var(--primary);
+      border-radius: 12px 12px 0 0;
+      min-height: 30px;
+      transform-origin: bottom;
+      animation: growBar 900ms cubic-bezier(.2,.8,.2,1) both;
+    }
+
+    .bar:nth-child(2) { background: var(--secondary); animation-delay: 80ms; }
+    .bar:nth-child(3) { background: var(--accent); animation-delay: 140ms; }
+    .bar:nth-child(4) { background: #60a5fa; animation-delay: 200ms; }
+    .bar:nth-child(5) { background: #34d399; animation-delay: 260ms; }
+    .bar:nth-child(6) { background: #fbbf24; animation-delay: 320ms; }
+
+    .mini-stat-stack {
+      display: grid;
+      gap: 12px;
+    }
+
+    .mini-stat {
+      background: white;
+      border-radius: 14px;
+      padding: 16px;
+      min-height: 94px;
+      display: grid;
+      align-content: space-between;
+      transition: transform var(--transition-fast), background var(--transition-fast);
+    }
+
+    .mini-stat:hover {
+      transform: scale(1.03);
+      background: #eff6ff;
+    }
+
+    .mini-stat strong {
+      font-size: 26px;
+      font-weight: 800;
+      letter-spacing: -0.04em;
+    }
+
+    .mini-stat span {
+      font-size: 13px;
+      text-transform: uppercase;
+      letter-spacing: .08em;
+      color: #475569;
+    }
+
+    .task-panel {
+      display: grid;
+      gap: 12px;
+    }
+
+    .task-item {
+      background: white;
+      border-radius: 14px;
+      padding: 14px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .task-left {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .task-bullet {
+      width: 16px;
+      height: 16px;
+      border-radius: 50%;
+      background: var(--primary);
+      flex-shrink: 0;
+    }
+
+    .task-left strong {
+      display: block;
+      font-size: 15px;
+      font-weight: 700;
+    }
+
+    .task-left small,
+    .task-time {
+      font-size: 12px;
+      color: #64748b;
+      text-transform: uppercase;
+      letter-spacing: .07em;
+    }
+
+    .os-sidepanel {
+      background: #f8fafc;
+      border-left: 2px solid #e5e7eb;
+      padding: 18px 14px;
+      display: grid;
+      gap: 14px;
+      align-content: start;
+    }
+
+    .side-block {
+      background: white;
+      border-radius: 14px;
+      padding: 16px;
+      min-height: 112px;
+      display: grid;
+      align-content: start;
+      gap: 10px;
+      transition: transform var(--transition-fast), background var(--transition-fast);
+    }
+
+    .side-block:hover {
+      transform: scale(1.03);
+      background: #f0fdf4;
+    }
+
+    .side-block h4 {
+      font-size: 15px;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+    }
+
+    .side-block p,
+    .side-block li {
+      font-size: 13px;
+      line-height: 1.55;
+      color: #475569;
+    }
+
+    .side-list {
+      list-style: none;
+      display: grid;
+      gap: 8px;
+    }
+
+    .dock {
+      display: flex;
+      justify-content: center;
+      gap: 12px;
+      padding-top: 18px;
+    }
+
+    .dock-item {
+      width: 48px;
+      height: 48px;
+      border: none;
+      border-radius: 14px;
+      background: rgba(255,255,255,0.14);
+      transition: transform var(--transition-fast), background var(--transition-fast);
+    }
+
+    .dock-item:hover {
+      transform: scale(1.15) translateY(-4px);
+      background: rgba(255,255,255,0.24);
+    }
+
+    .hero-ui-caption {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 18px;
+      margin-top: 18px;
+      color: rgba(255,255,255,0.88);
+      font-size: 14px;
+      text-transform: uppercase;
+      letter-spacing: .08em;
+    }
+
+    .trusted {
+      background: white;
+    }
+
+    .logo-band {
+      display: grid;
+      grid-template-columns: repeat(5, minmax(0, 1fr));
+      gap: 14px;
+      margin-top: 28px;
+    }
+
+    .logo-tile {
+      background: var(--muted);
+      min-height: 92px;
+      border-radius: 14px;
+      display: grid;
+      place-items: center;
+      font-weight: 800;
+      font-size: clamp(1.2rem, 2.4vw, 1.8rem);
+      letter-spacing: -0.04em;
+      color: #475569;
+      transition: transform var(--transition-fast), background var(--transition-fast), color var(--transition-fast);
+    }
+
+    .logo-tile:hover {
+      transform: scale(1.03);
+      background: #dbeafe;
+      color: var(--primary-dark);
+    }
+
+    .features {
+      background: var(--muted);
+    }
+
+    .feature-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 18px;
+      align-items: start;
+    }
+
+    .feature-card {
+      background: white;
+      border: none;
+      width: 100%;
+      text-align: left;
+      padding: 24px;
+      border-radius: 18px;
+      transition: transform var(--transition-fast), background var(--transition-fast);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .feature-card::after {
+      content: "";
+      position: absolute;
+      width: 120px;
+      height: 120px;
+      right: -30px;
+      top: -30px;
+      border-radius: 50%;
+      background: var(--muted);
+      transition: transform var(--transition-mid), background var(--transition-mid);
+    }
+
+    .feature-card:hover {
+      transform: scale(1.02);
+      background: #f8fbff;
+    }
+
+    .feature-card:hover::after,
+    .feature-card.active::after {
+      transform: scale(1.25);
+      background: #dbeafe;
+    }
+
+    .feature-icon {
+      width: 62px;
+      height: 62px;
+      border-radius: 50%;
+      display: grid;
+      place-items: center;
+      background: var(--primary);
+      color: white;
+      font-size: 26px;
+      font-weight: 800;
+      position: relative;
+      z-index: 1;
+      margin-bottom: 18px;
+      transition: transform var(--transition-fast), background var(--transition-fast);
+    }
+
+    .feature-card:hover .feature-icon,
+    .feature-card.active .feature-icon {
+      transform: scale(1.08);
+      background: var(--fg);
+    }
+
+    .feature-card h3 {
+      position: relative;
+      z-index: 1;
+      font-size: 26px;
+      line-height: 1;
+      letter-spacing: -0.03em;
+      margin-bottom: 12px;
+    }
+
+    .feature-card p,
+    .feature-card .mini-link {
+      position: relative;
+      z-index: 1;
+    }
+
+    .feature-card p {
+      font-size: 16px;
+      line-height: 1.65;
+      color: #475569;
+    }
+
+    .mini-link {
+      display: inline-flex;
+      margin-top: 14px;
+      color: var(--primary-dark);
+      text-transform: uppercase;
+      letter-spacing: .08em;
+      font-weight: 800;
+      font-size: 12px;
+      background: transparent;
+      border: none;
+      padding: 0;
+    }
+
+    .feature-detail-shell {
+      margin-top: 22px;
+      background: white;
+      border-radius: 22px;
+      overflow: hidden;
+      min-height: 340px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      transition: transform var(--transition-fast), background var(--transition-fast);
+    }
+
+    .feature-detail-copy,
+    .feature-detail-visual {
+      padding: 30px;
+    }
+
+    .feature-detail-copy {
+      background: #ffffff;
+      display: grid;
+      align-content: center;
+      gap: 18px;
+    }
+
+    .feature-detail-copy h3 {
+      font-size: clamp(2rem, 3vw, 3.4rem);
+      line-height: .96;
+      letter-spacing: -0.04em;
+    }
+
+    .feature-detail-copy p {
+      font-size: 17px;
+      line-height: 1.75;
+      color: #475569;
+      max-width: 520px;
+    }
+
+    .feature-points {
+      list-style: none;
+      display: grid;
+      gap: 10px;
+    }
+
+    .feature-points li {
+      display: flex;
+      gap: 12px;
+      align-items: start;
+      font-size: 15px;
+      color: #334155;
+    }
+
+    .feature-points li::before {
+      content: "";
+      width: 14px;
+      height: 14px;
+      border-radius: 50%;
+      background: var(--primary);
+      margin-top: 4px;
+      flex-shrink: 0;
+    }
+
+    .feature-detail-visual {
+      background: linear-gradient(180deg, #eff6ff 0%, #f8fafc 100%);
+      display: grid;
+      gap: 16px;
+      align-content: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .feature-detail-visual::before {
+      content: "";
+      position: absolute;
+      width: 220px;
+      height: 220px;
+      border-radius: 50%;
+      background: rgba(59,130,246,0.10);
+      top: -40px;
+      right: -50px;
+    }
+
+    .detail-window {
+      background: white;
+      border-radius: 16px;
+      padding: 18px;
+      position: relative;
+      z-index: 1;
+      transition: transform var(--transition-fast), background var(--transition-fast);
+    }
+
+    .detail-window:hover {
+      transform: scale(1.02);
+      background: #ffffff;
+    }
+
+    .detail-window.top {
+      transform: translateX(-18px);
+    }
+
+    .detail-window.bottom {
+      transform: translateX(18px);
+    }
+
+    .detail-window.bottom:hover {
+      transform: translateX(18px) scale(1.02);
+    }
+
+    .detail-window.top:hover {
+      transform: translateX(-18px) scale(1.02);
+    }
+
+    .window-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 14px;
+      gap: 12px;
+    }
+
+    .window-head strong {
+      font-size: 14px;
+      text-transform: uppercase;
+      letter-spacing: .08em;
+    }
+
+    .window-dots {
+      display: flex;
+      gap: 6px;
+    }
+
+    .window-dots span {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: var(--muted-2);
+    }
+
+    .window-row {
+      display: grid;
+      gap: 10px;
+    }
+
+    .window-line {
+      height: 14px;
+      border-radius: 999px;
+      background: var(--muted);
+    }
+
+    .window-line.short { width: 52%; }
+    .window-line.mid { width: 76%; }
+    .window-line.blue { background: #dbeafe; }
+    .window-line.green { background: #d1fae5; }
+    .window-line.gold { background: #fef3c7; }
+
+    .story-band {
+      background: var(--dark);
+      color: white;
+    }
+
+    .story-grid {
+      display: grid;
+      grid-template-columns: .95fr 1.05fr;
+      gap: 28px;
+      align-items: stretch;
+    }
+
+    .story-block {
+      background: rgba(255,255,255,0.06);
+      border-radius: 22px;
+      padding: 30px;
+      transition: transform var(--transition-fast), background var(--transition-fast);
+    }
+
+    .story-block:hover {
+      transform: scale(1.015);
+      background: rgba(255,255,255,0.09);
+    }
+
+    .story-grid h3 {
+      font-size: clamp(2rem, 3vw, 3rem);
+      line-height: .96;
+      letter-spacing: -0.04em;
+      margin-bottom: 18px;
+    }
+
+    .story-grid p {
+      color: rgba(255,255,255,0.82);
+      line-height: 1.75;
+      font-size: 17px;
+    }
+
+    .timeline {
+      display: grid;
+      gap: 16px;
+    }
+
+    .timeline-item {
+      display: grid;
+      grid-template-columns: 94px 1fr;
+      gap: 14px;
+      align-items: start;
+      padding-top: 4px;
+    }
+
+    .timeline-year {
+      color: #93c5fd;
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: .12em;
+      font-weight: 800;
+      padding-top: 4px;
+    }
+
+    .timeline-copy {
+      background: rgba(255,255,255,0.05);
+      border-radius: 16px;
+      padding: 16px;
+    }
+
+    .timeline-copy strong {
+      display: block;
+      font-size: 18px;
+      margin-bottom: 8px;
+      letter-spacing: -0.02em;
+    }
+
+    .stats {
+      background: var(--secondary);
+      color: white;
+    }
+
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 18px;
+      margin-top: 34px;
+    }
+
+    .stat-card {
+      background: rgba(255,255,255,0.12);
+      border-radius: 18px;
+      padding: 26px;
+      transition: transform var(--transition-fast), background var(--transition-fast);
+    }
+
+    .stat-card:hover {
+      transform: scale(1.03);
+      background: rgba(255,255,255,0.18);
+    }
+
+    .stat-card strong {
+      display: block;
+      font-size: clamp(2.2rem, 4vw, 4rem);
+      line-height: .95;
+      letter-spacing: -0.05em;
+      font-weight: 800;
+    }
+
+    .stat-card:nth-child(1) strong { color: white; }
+    .stat-card:nth-child(2) strong { color: #dbeafe; }
+    .stat-card:nth-child(3) strong { color: #fef3c7; }
+    .stat-card:nth-child(4) strong { color: #dcfce7; }
+
+    .stat-card span {
+      display: block;
+      margin-top: 12px;
+      font-size: 13px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: .09em;
+      color: rgba(255,255,255,0.86);
+    }
+
+    .pricing {
+      background: white;
+    }
+
+    .pricing-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 18px;
+      margin-top: 34px;
+      align-items: stretch;
+    }
+
+    .price-card {
+      background: var(--muted);
+      border: none;
+      padding: 30px;
+      border-radius: 22px;
+      text-align: left;
+      position: relative;
+      transition: transform var(--transition-fast), background var(--transition-fast);
+      overflow: hidden;
+    }
+
+    .price-card.popular {
+      background: #eff6ff;
+      transform: scale(1.04);
+    }
+
+    .price-card:hover {
+      transform: scale(1.03);
+      background: #eef4ff;
+    }
+
+    .price-card.popular:hover {
+      transform: scale(1.07);
+    }
+
+    .price-badge {
+      display: inline-flex;
+      padding: 10px 12px;
+      border-radius: 999px;
+      background: white;
+      font-size: 11px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: .1em;
+      margin-bottom: 20px;
+    }
+
+    .price-card h3 {
+      font-size: 30px;
+      letter-spacing: -0.03em;
+      margin-bottom: 8px;
+    }
+
+    .price-card p {
+      color: #475569;
+      font-size: 16px;
+      line-height: 1.65;
+    }
+
+    .price {
+      display: flex;
+      align-items: baseline;
+      gap: 8px;
+      margin: 22px 0 18px;
+    }
+
+    .price strong {
+      font-size: clamp(3rem, 5vw, 4.6rem);
+      line-height: .9;
+      font-weight: 800;
+      letter-spacing: -0.06em;
+    }
+
+    .price span {
+      font-size: 15px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: .08em;
+      color: #64748b;
+    }
+
+    .price-list {
+      list-style: none;
+      display: grid;
+      gap: 12px;
+      margin: 18px 0 26px;
+    }
+
+    .price-list li {
+      display: flex;
+      gap: 12px;
+      align-items: start;
+      color: #334155;
+      font-size: 15px;
+      line-height: 1.55;
+    }
+
+    .price-list li::before {
+      content: "";
+      width: 14px;
+      height: 14px;
+      border-radius: 50%;
+      background: var(--fg);
+      margin-top: 5px;
+      flex-shrink: 0;
+    }
+
+    .faq {
+      background: var(--muted);
+    }
+
+    .faq-list {
+      display: grid;
+      gap: 0;
+      margin-top: 28px;
+    }
+
+    .faq-item {
+      border-top: 2px solid var(--fg);
+      background: white;
+    }
+
+    .faq-item:last-child {
+      border-bottom: 2px solid var(--fg);
+    }
+
+    .faq-item summary {
+      list-style: none;
+      padding: 24px 26px;
+      font-size: 20px;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 18px;
+      transition: background var(--transition-fast), color var(--transition-fast);
+    }
+
+    .faq-item summary::-webkit-details-marker {
+      display: none;
+    }
+
+    .faq-item[open] summary,
+    .faq-item summary:hover {
+      background: #eff6ff;
+    }
+
+    .faq-icon {
+      width: 34px;
+      height: 34px;
+      border-radius: 50%;
+      background: var(--fg);
+      color: white;
+      display: grid;
+      place-items: center;
+      font-size: 18px;
+      flex-shrink: 0;
+      transition: transform var(--transition-fast), background var(--transition-fast);
+    }
+
+    .faq-item[open] .faq-icon {
+      transform: rotate(45deg);
+      background: var(--primary);
+    }
+
+    .faq-content {
+      padding: 0 26px 24px;
+      color: #475569;
+      font-size: 16px;
+      line-height: 1.75;
+      max-width: 880px;
+    }
+
+    .cta {
+      background: var(--accent);
+      color: white;
+      text-align: center;
+    }
+
+    .cta-shell {
+      position: relative;
+      overflow: hidden;
+      border-radius: 24px;
+      padding: 56px 24px;
+    }
+
+    .cta-shell::before,
+    .cta-shell::after {
+      content: "";
+      position: absolute;
+      background: rgba(255,255,255,0.10);
+      pointer-events: none;
+    }
+
+    .cta-shell::before {
+      width: 220px;
+      height: 220px;
+      border-radius: 50%;
+      left: -40px;
+      top: -60px;
+    }
+
+    .cta-shell::after {
+      width: 180px;
+      height: 180px;
+      right: -40px;
+      bottom: -50px;
+      transform: rotate(45deg);
+      border-radius: 22px;
+    }
+
+    .cta h2 {
+      font-size: clamp(2.5rem, 5vw, 5rem);
+      line-height: .93;
+      letter-spacing: -0.05em;
+      position: relative;
+      z-index: 1;
+    }
+
+    .cta p {
+      margin: 18px auto 28px;
+      max-width: 640px;
+      position: relative;
+      z-index: 1;
+      color: rgba(255,255,255,0.92);
+      font-size: 18px;
+      line-height: 1.7;
+    }
+
+    .footer {
+      background: var(--dark);
+      color: white;
+      padding: 34px 0 40px;
+    }
+
+    .footer-inner {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+
+    .footer p,
+    .footer a {
+      color: rgba(255,255,255,0.78);
+      text-decoration: none;
+      font-size: 14px;
+      line-height: 1.6;
+    }
+
+    .footer-links {
+      display: flex;
+      gap: 14px;
+      flex-wrap: wrap;
+    }
+
+    .reveal {
+      opacity: 0;
+      transform: translateY(34px) scale(.985);
+      transition: opacity 720ms cubic-bezier(.2,.8,.2,1), transform 720ms cubic-bezier(.2,.8,.2,1);
+      will-change: transform, opacity;
+    }
+
+    .reveal.is-visible {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+    }
+
+    .reveal-left {
+      opacity: 0;
+      transform: translateX(-36px);
+      transition: opacity 760ms cubic-bezier(.2,.8,.2,1), transform 760ms cubic-bezier(.2,.8,.2,1);
+    }
+
+    .reveal-right {
+      opacity: 0;
+      transform: translateX(36px);
+      transition: opacity 760ms cubic-bezier(.2,.8,.2,1), transform 760ms cubic-bezier(.2,.8,.2,1);
+    }
+
+    .reveal-left.is-visible,
+    .reveal-right.is-visible {
+      opacity: 1;
+      transform: translateX(0);
+    }
+
+    .section-transition {
+      position: absolute;
+      left: 0;
+      right: 0;
+      top: 0;
+      height: 110px;
+      background: linear-gradient(to bottom, rgba(255,255,255,0.55), transparent);
+      pointer-events: none;
+      opacity: .55;
+    }
+
+    @keyframes spin {
+      from { transform: rotate(0deg); }
+      to { transform: rotate(360deg); }
+    }
+
+    @keyframes growBar {
+      from { transform: scaleY(0.1); }
+      to { transform: scaleY(1); }
+    }
+
+    @media (max-width: 1100px) {
+      .hero-grid,
+      .story-grid,
+      .feature-detail-shell,
+      .os-grid,
+      .pricing-grid,
+      .stats-grid,
+      .feature-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .hero-grid {
+        min-height: unset;
+        padding: 70px 0 90px;
+      }
+
+      .hero-ui {
+        transform: none;
+      }
+
+      .hero-ui:hover {
+        transform: scale(1.01);
+      }
+
+      .logo-band {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+      }
+
+      .os-shell {
+        grid-template-columns: 82px 1fr;
+      }
+
+      .os-sidepanel {
+        grid-column: 1 / -1;
+        border-left: 0;
+        border-top: 2px solid #e5e7eb;
+      }
+    }
+
+    @media (max-width: 760px) {
+      body {
+        cursor: auto;
+      }
+
+      .cursor,
+      .cursor-ring,
+      .spotlight {
+        display: none;
+      }
+
+      .container {
+        width: min(var(--container), calc(100% - 28px));
+      }
+
+      .nav-inner {
+        min-height: 74px;
+      }
+
+      .nav-links {
+        display: none;
+      }
+
+      .hero h1 {
+        font-size: clamp(3rem, 12vw, 4.2rem);
+      }
+
+      .hero-metrics {
+        grid-template-columns: 1fr;
+      }
+
+      .section {
+        padding: 86px 0;
+      }
+
+      .section-head {
+        flex-direction: column;
+        align-items: start;
+      }
+
+      .section-head p {
+        max-width: unset;
+      }
+
+      .hero-actions {
+        flex-direction: column;
+        align-items: stretch;
+      }
+
+      .btn {
+        width: 100%;
+      }
+
+      .logo-band {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .os-shell {
+        grid-template-columns: 1fr;
+      }
+
+      .os-sidebar {
+        grid-auto-flow: column;
+        overflow-x: auto;
+        grid-template-columns: repeat(5, 90px);
+        border-right: 0;
+        border-bottom: 2px solid #e5e7eb;
+      }
+
+      .os-main,
+      .os-sidepanel,
+      .feature-detail-copy,
+      .feature-detail-visual,
+      .price-card,
+      .story-block {
+        padding: 22px;
+      }
+
+      .footer-inner {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      html { scroll-behavior: auto; }
+      *, *::before, *::after { animation: none !important; transition: none !important; }
+      .reveal, .reveal-left, .reveal-right { opacity: 1 !important; transform: none !important; }
+    }
+  </style>
+</head>
+<body>
+  <div class="cursor" aria-hidden="true"></div>
+  <div class="cursor-ring" aria-hidden="true"></div>
+  <div class="page-noise" aria-hidden="true"></div>
+  <div class="spotlight" aria-hidden="true"></div>
+
+  <nav class="nav" id="nav">
+    <div class="container nav-inner">
+      <a href="#top" class="brand">
+        <span class="brand-mark" aria-hidden="true"></span>
+        <span>FrameOS</span>
+      </a>
+
+      <div class="nav-links">
+        <a href="#features">Features</a>
+        <a href="#story">System</a>
+        <a href="#pricing">Pricing</a>
+        <a href="#faq">FAQ</a>
+      </div>
+
+      <a href="#cta" class="btn btn-primary">Book a Demo</a>
+    </div>
+  </nav>
+
+  <main id="top">
+    <section class="hero section">
+      <div class="hero-shape"></div>
+      <div class="hero-shape-2"></div>
+      <div class="hero-shape-3"></div>
+      <div class="hero-shape-4"></div>
+
+      <div class="container hero-grid">
+        <div class="hero-copy reveal-left">
+          <div class="eyebrow">New Interface Category • Work OS</div>
+          <h1>Design your team's <span>best operating system.</span></h1>
+          <p>
+            FrameOS is a fictitious premium platform that turns planning, execution, and team rhythm into one decisive interface. Built here as a style sample, it lets you show clients a bold, modern SaaS direction that feels polished, premium, and product-ready.
+          </p>
+
+          <div class="hero-actions">
+            <a href="#cta" class="btn btn-secondary">Start the Pilot</a>
+            <a href="#features" class="btn btn-outline">Explore the System</a>
+          </div>
+
+          <div class="hero-metrics">
+            <div class="metric">
+              <strong>43%</strong>
+              <span>Faster execution</span>
+            </div>
+            <div class="metric">
+              <strong>18k</strong>
+              <span>Weekly power users</span>
+            </div>
+            <div class="metric">
+              <strong>4.9/5</strong>
+              <span>System clarity score</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="hero-ui-wrap reveal-right">
+          <div class="ui-orbit" aria-hidden="true"></div>
+
+          <div class="hero-ui" id="hero-ui">
+            <div class="os-bar">
+              <div class="os-dots" aria-hidden="true">
+                <span></span><span></span><span></span>
+              </div>
+              <div class="os-title">FrameOS - Live Workspace</div>
+              <div class="panel-tag">v6.2</div>
+            </div>
+
+            <div class="os-shell">
+              <div class="os-sidebar" role="tablist" aria-label="FrameOS views">
+                <button class="os-sidebar-item active" data-mode="overview" aria-pressed="true">Grid</button>
+                <button class="os-sidebar-item" data-mode="planning" aria-pressed="false">Plan</button>
+                <button class="os-sidebar-item" data-mode="focus" aria-pressed="false">Focus</button>
+                <button class="os-sidebar-item" data-mode="analytics" aria-pressed="false">Data</button>
+                <button class="os-sidebar-item" data-mode="team" aria-pressed="false">Team</button>
+              </div>
+
+              <div class="os-main">
+                <div class="os-breadcrumb">
+                  <div>
+                    <strong id="os-screen-title">Signal Dashboard</strong>
+                    <p id="os-screen-subtitle" style="font-size:13px;color:#64748b;margin-top:6px;">A single surface for team direction, active work, and system rhythm.</p>
+                  </div>
+                  <div class="chip-row">
+                    <button class="chip active">Live</button>
+                    <button class="chip">Sync</button>
+                    <button class="chip">Boards</button>
+                  </div>
+                </div>
+
+                <div class="os-grid">
+                  <div class="panel">
+                    <div class="panel-title">
+                      <h3 id="panel-main-title">Weekly Velocity</h3>
+                      <span class="panel-tag" id="panel-main-tag">Overview</span>
+                    </div>
+                    <div class="graph" id="graph-bars">
+                      <div class="bar" style="height: 46%"></div>
+                      <div class="bar" style="height: 62%"></div>
+                      <div class="bar" style="height: 54%"></div>
+                      <div class="bar" style="height: 76%"></div>
+                      <div class="bar" style="height: 88%"></div>
+                      <div class="bar" style="height: 72%"></div>
+                    </div>
+                  </div>
+
+                  <div class="mini-stat-stack" id="mini-stat-stack">
+                    <div class="mini-stat">
+                      <span>Active sprint health</span>
+                      <strong>92%</strong>
+                    </div>
+                    <div class="mini-stat">
+                      <span>Context switch drop</span>
+                      <strong>31%</strong>
+                    </div>
+                    <div class="mini-stat">
+                      <span>Tasks shipped</span>
+                      <strong>148</strong>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="panel">
+                  <div class="panel-title">
+                    <h3 id="panel-secondary-title">Priority Queue</h3>
+                    <span class="panel-tag">Execution</span>
+                  </div>
+                  <div class="task-panel" id="task-panel">
+                    <div class="task-item">
+                      <div class="task-left">
+                        <span class="task-bullet"></span>
+                        <div>
+                          <strong>Launch new product onboarding</strong>
+                          <small>Cross-functional workflow</small>
+                        </div>
+                      </div>
+                      <span class="task-time">2h left</span>
+                    </div>
+                    <div class="task-item">
+                      <div class="task-left">
+                        <span class="task-bullet" style="background:#10B981"></span>
+                        <div>
+                          <strong>Approve brand system update</strong>
+                          <small>Design operations</small>
+                        </div>
+                      </div>
+                      <span class="task-time">Today</span>
+                    </div>
+                    <div class="task-item">
+                      <div class="task-left">
+                        <span class="task-bullet" style="background:#F59E0B"></span>
+                        <div>
+                          <strong>Review sprint blockers</strong>
+                          <small>Leadership view</small>
+                        </div>
+                      </div>
+                      <span class="task-time">14m</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <aside class="os-sidepanel">
+                <div class="side-block">
+                  <h4>Signal Board</h4>
+                  <p id="side-block-copy">Work is grouped by focus intensity, not just deadlines, so teams see what deserves attention now.</p>
+                </div>
+                <div class="side-block">
+                  <h4>System Notes</h4>
+                  <ul class="side-list" id="side-list">
+                    <li>3 boards updated</li>
+                    <li>2 blockers resolved</li>
+                    <li>8 team rituals synced</li>
+                  </ul>
+                </div>
+                <div class="side-block">
+                  <h4>Mode</h4>
+                  <p id="mode-label">Overview mode is active.</p>
+                </div>
+              </aside>
+            </div>
+          </div>
+
+          <div class="hero-ui-caption">
+            <span>Interactive sample interface</span>
+            <div class="dock" aria-hidden="true">
+              <button class="dock-item"></button>
+              <button class="dock-item"></button>
+              <button class="dock-item"></button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="trusted section">
+      <div class="section-transition" aria-hidden="true"></div>
+      <div class="container reveal">
+        <div class="section-head">
+          <div>
+            <div class="section-label light">Preferred by modern teams</div>
+            <h2>Premium enough to feel enterprise. Clear enough to feel instant.</h2>
+          </div>
+          <p>
+            This section sells credibility without clutter. It gives the page a real product-marketing rhythm and helps the fake brand feel established.
+          </p>
+        </div>
+
+        <div class="logo-band">
+          <div class="logo-tile">Aster</div>
+          <div class="logo-tile">North</div>
+          <div class="logo-tile">Luma</div>
+          <div class="logo-tile">Pilot</div>
+          <div class="logo-tile">Method</div>
+        </div>
+      </div>
+    </section>
+
+    <section class="features section" id="features">
+      <div class="container">
+        <div class="section-head reveal">
+          <div>
+            <div class="section-label light">Expandable feature system</div>
+            <h2>Click a capability and the interface explains itself.</h2>
+          </div>
+          <p>
+            Instead of static cards, these features open a richer detail state. That makes the page feel more expensive and lets you demonstrate interaction design, not just visual styling.
+          </p>
+        </div>
+
+        <div class="feature-grid reveal" id="feature-grid">
+          <button class="feature-card active" data-feature="workflow">
+            <div class="feature-icon">01</div>
+            <h3>Workflow Architecture</h3>
+            <p>Build a visual operating layer that shows what matters now, next, and later.</p>
+            <span class="mini-link">Open feature</span>
+          </button>
+
+          <button class="feature-card" data-feature="focus">
+            <div class="feature-icon">02</div>
+            <h3>Focus Mapping</h3>
+            <p>Reduce noise by reshaping work around attention, not just assignments.</p>
+            <span class="mini-link">Open feature</span>
+          </button>
+
+          <button class="feature-card" data-feature="intelligence">
+            <div class="feature-icon">03</div>
+            <h3>Ambient Intelligence</h3>
+            <p>Surface patterns, status, and pressure points without overwhelming the interface.</p>
+            <span class="mini-link">Open feature</span>
+          </button>
+        </div>
+
+        <div class="feature-detail-shell reveal" id="feature-detail-shell">
+          <div class="feature-detail-copy">
+            <div class="section-label light" id="feature-pill">Feature 01</div>
+            <h3 id="feature-detail-title">Workflow Architecture for teams that hate clutter.</h3>
+            <p id="feature-detail-description">
+              Structure the system around momentum. FrameOS groups priorities, execution layers, and review loops into one readable surface, so the interface feels like a decision engine instead of a dashboard.
+            </p>
+            <ul class="feature-points" id="feature-points">
+              <li>Multi-layer work mapping without visual overload</li>
+              <li>Reusable system blocks for leaders, contributors, and operators</li>
+              <li>One clean surface for planning, execution, and review</li>
+            </ul>
+          </div>
+
+          <div class="feature-detail-visual" id="feature-visual-area">
+            <div class="detail-window top">
+              <div class="window-head">
+                <strong id="detail-window-title-1">Structure Layer</strong>
+                <div class="window-dots"><span></span><span></span><span></span></div>
+              </div>
+              <div class="window-row">
+                <div class="window-line blue"></div>
+                <div class="window-line mid"></div>
+                <div class="window-line short"></div>
+                <div class="window-line"></div>
+              </div>
+            </div>
+
+            <div class="detail-window bottom">
+              <div class="window-head">
+                <strong id="detail-window-title-2">Execution View</strong>
+                <div class="window-dots"><span></span><span></span><span></span></div>
+              </div>
+              <div class="window-row" id="detail-window-lines-2">
+                <div class="window-line green"></div>
+                <div class="window-line mid"></div>
+                <div class="window-line gold short"></div>
+                <div class="window-line"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="story-band section" id="story">
+      <div class="container story-grid">
+        <div class="story-block reveal-left">
+          <div class="section-label">Operating system mode</div>
+          <h3>A landing page that feels like a product, not a poster pretending to be one.</h3>
+          <p>
+            The strongest premium landing pages do more than stack sections. They create the sensation that a real product exists behind the marketing. This build uses a fake application surface, dynamic states, strong section transitions, and deliberate hierarchy to create that feeling.
+          </p>
+        </div>
+
+        <div class="story-block reveal-right">
+          <div class="timeline">
+            <div class="timeline-item">
+              <div class="timeline-year">Layer 01</div>
+              <div class="timeline-copy">
+                <strong>Hero as system preview</strong>
+                <p>The hero does real work. It sells the product and demonstrates the interface language immediately.</p>
+              </div>
+            </div>
+            <div class="timeline-item">
+              <div class="timeline-year">Layer 02</div>
+              <div class="timeline-copy">
+                <strong>Interaction as proof</strong>
+                <p>Cards expand, modes change, and the UI preview responds. That gives the design credibility.</p>
+              </div>
+            </div>
+            <div class="timeline-item">
+              <div class="timeline-year">Layer 03</div>
+              <div class="timeline-copy">
+                <strong>Sections with rhythm</strong>
+                <p>Alternating color blocks and strong scale shifts make the page feel expensive without using shadows.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="stats section">
+      <div class="container reveal">
+        <div class="section-head">
+          <div>
+            <div class="section-label">Performance story</div>
+            <h2>Numbers that sell the fiction with confidence.</h2>
+          </div>
+          <p style="color: rgba(255,255,255,0.84);">
+            Fictitious products still need believable metrics. These give the layout authority and help the design read like a funded software company.
+          </p>
+        </div>
+
+        <div class="stats-grid">
+          <div class="stat-card">
+            <strong>71%</strong>
+            <span>less status friction</span>
+          </div>
+          <div class="stat-card">
+            <strong>3.4x</strong>
+            <span>faster weekly planning</span>
+          </div>
+          <div class="stat-card">
+            <strong>12 min</strong>
+            <span>average daily review time</span>
+          </div>
+          <div class="stat-card">
+            <strong>94%</strong>
+            <span>pilot retention rate</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="pricing section" id="pricing">
+      <div class="container">
+        <div class="section-head reveal">
+          <div>
+            <div class="section-label light">Pricing with hierarchy</div>
+            <h2>Simple tiers. Strong contrast. Real buying energy.</h2>
+          </div>
+          <p>
+            Pricing is one of the easiest ways to show whether you understand product landing pages. This layout uses scale, contrast, and density to make the middle plan feel naturally preferred.
+          </p>
+        </div>
+
+        <div class="pricing-grid reveal">
+          <div class="price-card">
+            <span class="price-badge">Starter</span>
+            <h3>Core</h3>
+            <p>For small teams testing a sharper operating rhythm.</p>
+            <div class="price"><strong>$19</strong><span>/ seat</span></div>
+            <ul class="price-list">
+              <li>3 workspaces</li>
+              <li>Focus boards and rituals</li>
+              <li>Basic system analytics</li>
+            </ul>
+            <a href="#cta" class="btn btn-secondary">Choose Core</a>
+          </div>
+
+          <div class="price-card popular">
+            <span class="price-badge">Most Popular</span>
+            <h3>Scale</h3>
+            <p>For teams who want clarity across execution, leadership, and reporting.</p>
+            <div class="price"><strong>$42</strong><span>/ seat</span></div>
+            <ul class="price-list">
+              <li>Unlimited workspaces</li>
+              <li>Operating system templates</li>
+              <li>Automation and advanced analytics</li>
+            </ul>
+            <a href="#cta" class="btn btn-primary">Choose Scale</a>
+          </div>
+
+          <div class="price-card">
+            <span class="price-badge">Enterprise</span>
+            <h3>Command</h3>
+            <p>For organizations who want a premium work layer across multiple functions.</p>
+            <div class="price"><strong>$89</strong><span>/ seat</span></div>
+            <ul class="price-list">
+              <li>Custom system architecture</li>
+              <li>Governance, permissions, and rollups</li>
+              <li>Priority support and onboarding</li>
+            </ul>
+            <a href="#cta" class="btn btn-secondary">Talk to Sales</a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="faq section" id="faq">
+      <div class="container reveal">
+        <div class="section-head">
+          <div>
+            <div class="section-label light">Frequently asked</div>
+            <h2>The last section that makes it all feel complete.</h2>
+          </div>
+          <p>
+            Premium landing pages usually close gaps before they ask for action. This FAQ helps the page feel finished, thoughtful, and more realistic.
+          </p>
+        </div>
+
+        <div class="faq-list">
+          <details class="faq-item" open>
+            <summary>
+              Is FrameOS a real product?
+              <span class="faq-icon">+</span>
+            </summary>
+            <div class="faq-content">
+              Not in this sample. It is a fictitious brand and landing page designed to showcase a premium flat-design direction, advanced front-end interaction, and a more product-authentic presentation style.
+            </div>
+          </details>
+
+          <details class="faq-item">
+            <summary>
+              Why build a fake app preview into the hero?
+              <span class="faq-icon">+</span>
+            </summary>
+            <div class="faq-content">
+              Because it immediately tells a stronger story. Instead of only describing the product, the page shows a credible system surface that supports the brand, structure, and interaction language.
+            </div>
+          </details>
+
+          <details class="faq-item">
+            <summary>
+              Can this be adapted into a real client site?
+              <span class="faq-icon">+</span>
+            </summary>
+            <div class="faq-content">
+              Yes. The page is structured in reusable sections, uses a centralized token system, and keeps all interactions in plain HTML, CSS, and JavaScript, so it is straightforward to tailor to a real startup, agency, or SaaS concept.
+            </div>
+          </details>
+        </div>
+      </div>
+    </section>
+
+    <section class="cta section" id="cta">
+      <div class="container reveal">
+        <div class="cta-shell">
+          <h2>Ready to show clients a second design language?</h2>
+          <p>
+            Use this page as a style sample for premium product work. It feels like a believable startup homepage while clearly showing your motion, layout, UI, and interaction range.
+          </p>
+          <div class="hero-actions" style="justify-content:center; position:relative; z-index:1;">
+            <a href="#top" class="btn btn-secondary">Replay the Experience</a>
+            <a href="#features" class="btn btn-outline" style="border-color:white;color:white;">Inspect Features</a>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="container footer-inner">
+      <p>© 2026 FrameOS. Fictitious product sample built to showcase premium web design direction.</p>
+      <div class="footer-links">
+        <a href="#top">Top</a>
+        <a href="#features">Features</a>
+        <a href="#pricing">Pricing</a>
+        <a href="#faq">FAQ</a>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    const body = document.body;
+    const cursor = document.querySelector('.cursor');
+    const cursorRing = document.querySelector('.cursor-ring');
+    const interactiveEls = document.querySelectorAll('a, button, summary, .feature-card, .price-card, .logo-tile, .dock-item');
+    const spotlightRoot = document.documentElement;
+
+    let mouseX = window.innerWidth / 2;
+    let mouseY = window.innerHeight / 2;
+    let ringX = mouseX;
+    let ringY = mouseY;
+
+    const isTouch = window.matchMedia('(pointer: coarse)').matches;
+
+    if (!isTouch) {
+      window.addEventListener('mousemove', (e) => {
+        mouseX = e.clientX;
+        mouseY = e.clientY;
+        spotlightRoot.style.setProperty('--cursor-x', mouseX + 'px');
+        spotlightRoot.style.setProperty('--cursor-y', mouseY + 'px');
+        cursor.style.transform = `translate(${mouseX}px, ${mouseY}px) translate(-50%, -50%)`;
+      });
+
+      function animateRing() {
+        ringX += (mouseX - ringX) * 0.18;
+        ringY += (mouseY - ringY) * 0.18;
+        cursorRing.style.transform = `translate(${ringX}px, ${ringY}px) translate(-50%, -50%)`;
+        requestAnimationFrame(animateRing);
+      }
+      animateRing();
+
+      interactiveEls.forEach((el) => {
+        el.addEventListener('mouseenter', () => body.classList.add('cursor-active'));
+        el.addEventListener('mouseleave', () => body.classList.remove('cursor-active'));
+      });
+    }
+
+    const nav = document.getElementById('nav');
+    window.addEventListener('scroll', () => {
+      nav.classList.toggle('scrolled', window.scrollY > 10);
+    });
+
+    const revealEls = document.querySelectorAll('.reveal, .reveal-left, .reveal-right');
+    const revealObserver = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('is-visible');
+          revealObserver.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.16, rootMargin: '0px 0px -40px 0px' });
+
+    revealEls.forEach((el) => revealObserver.observe(el));
+
+    const featureData = {
+      workflow: {
+        pill: 'Feature 01',
+        title: 'Workflow Architecture for teams that hate clutter.',
+        description: 'Structure the system around momentum. FrameOS groups priorities, execution layers, and review loops into one readable surface, so the interface feels like a decision engine instead of a dashboard.',
+        points: [
+          'Multi-layer work mapping without visual overload',
+          'Reusable system blocks for leaders, contributors, and operators',
+          'One clean surface for planning, execution, and review'
+        ],
+        w1: 'Structure Layer',
+        w2: 'Execution View',
+        lines1: ['blue', '', 'short', ''],
+        lines2: ['green', 'mid', 'gold short', '']
+      },
+      focus: {
+        pill: 'Feature 02',
+        title: 'Focus Mapping that turns attention into a design primitive.',
+        description: 'Not all tasks deserve the same mental energy. Focus Mapping helps teams cluster work by cognitive weight, urgency, and interruption risk, so the interface supports better attention instead of creating more noise.',
+        points: [
+          'Separate deep work from admin and reactive layers',
+          'Visual emphasis based on attention cost, not just due dates',
+          'Clear daily rhythm for individuals and teams'
+        ],
+        w1: 'Attention Zones',
+        w2: 'Session Planner',
+        lines1: ['gold', 'mid', 'blue short', ''],
+        lines2: ['blue', 'green short', 'mid', '']
+      },
+      intelligence: {
+        pill: 'Feature 03',
+        title: 'Ambient Intelligence that whispers instead of shouting.',
+        description: 'The best systems reveal patterns without hijacking the interface. Ambient Intelligence surfaces velocity shifts, pressure points, and unusual signals in a calm visual language that feels premium instead of frantic.',
+        points: [
+          'Low-noise pattern detection in the flow of work',
+          'Signals that feel assistive rather than distracting',
+          'Decision support designed into the UI itself'
+        ],
+        w1: 'Signal Layer',
+        w2: 'Forecast Module',
+        lines1: ['green', 'mid', 'gold short', 'blue'],
+        lines2: ['gold', 'mid', 'blue short', 'green']
+      }
+    };
+
+    const featureCards = document.querySelectorAll('.feature-card');
+    const featurePill = document.getElementById('feature-pill');
+    const featureTitle = document.getElementById('feature-detail-title');
+    const featureDescription = document.getElementById('feature-detail-description');
+    const featurePoints = document.getElementById('feature-points');
+    const detailWindowTitle1 = document.getElementById('detail-window-title-1');
+    const detailWindowTitle2 = document.getElementById('detail-window-title-2');
+    const detailShell = document.getElementById('feature-detail-shell');
+
+    function buildLines(target, lines) {
+      target.innerHTML = '';
+      lines.forEach((cls) => {
+        const div = document.createElement('div');
+        div.className = `window-line ${cls}`.trim();
+        target.appendChild(div);
+      });
+    }
+
+    function setFeature(key) {
+      const data = featureData[key];
+      if (!data) return;
+
+      featureCards.forEach((card) => {
+        const active = card.dataset.feature === key;
+        card.classList.toggle('active', active);
+        card.setAttribute('aria-pressed', active ? 'true' : 'false');
+      });
+
+      featurePill.textContent = data.pill;
+      featureTitle.textContent = data.title;
+      featureDescription.textContent = data.description;
+      featurePoints.innerHTML = '';
+      data.points.forEach((point) => {
+        const li = document.createElement('li');
+        li.textContent = point;
+        featurePoints.appendChild(li);
+      });
+      detailWindowTitle1.textContent = data.w1;
+      detailWindowTitle2.textContent = data.w2;
+
+      const topLines = document.querySelector('.detail-window.top .window-row');
+      const bottomLines = document.getElementById('detail-window-lines-2');
+      buildLines(topLines, data.lines1);
+      buildLines(bottomLines, data.lines2);
+
+      detailShell.animate([
+        { transform: 'scale(0.99)', opacity: 0.85 },
+        { transform: 'scale(1)', opacity: 1 }
+      ], {
+        duration: 320,
+        easing: 'cubic-bezier(.2,.8,.2,1)'
+      });
+    }
+
+    featureCards.forEach((card) => {
+      card.addEventListener('click', () => setFeature(card.dataset.feature));
+    });
+
+    const osModes = {
+      overview: {
+        screenTitle: 'Signal Dashboard',
+        subtitle: 'A single surface for team direction, active work, and system rhythm.',
+        mainTitle: 'Weekly Velocity',
+        mainTag: 'Overview',
+        barHeights: ['46%', '62%', '54%', '76%', '88%', '72%'],
+        stats: [
+          { label: 'Active sprint health', value: '92%' },
+          { label: 'Context switch drop', value: '31%' },
+          { label: 'Tasks shipped', value: '148' }
+        ],
+        tasks: [
+          ['Launch new product onboarding', 'Cross-functional workflow', '2h left', '#3B82F6'],
+          ['Approve brand system update', 'Design operations', 'Today', '#10B981'],
+          ['Review sprint blockers', 'Leadership view', '14m', '#F59E0B']
+        ],
+        sideCopy: 'Work is grouped by focus intensity, not just deadlines, so teams see what deserves attention now.',
+        sideList: ['3 boards updated', '2 blockers resolved', '8 team rituals synced'],
+        mode: 'Overview mode is active.'
+      },
+      planning: {
+        screenTitle: 'Planning Layer',
+        subtitle: 'Map weekly priorities, align owners, and reduce drift before work starts.',
+        mainTitle: 'Roadmap Compression',
+        mainTag: 'Planning',
+        barHeights: ['72%', '54%', '68%', '60%', '84%', '92%'],
+        stats: [
+          { label: 'Plans aligned', value: '87%' },
+          { label: 'Dependencies cleared', value: '24' },
+          { label: 'Cycles saved', value: '9' }
+        ],
+        tasks: [
+          ['Finalize quarter themes', 'Leadership planning', '11am', '#3B82F6'],
+          ['Rebalance growth backlog', 'Operations', '4 items', '#10B981'],
+          ['Approve sequence map', 'Product + design', 'Next', '#F59E0B']
+        ],
+        sideCopy: 'Planning mode compresses strategy into a readable layer so the team sees sequence, not chaos.',
+        sideList: ['Roadmap view synced', 'Owners assigned', '6 gaps identified'],
+        mode: 'Planning mode is active.'
+      },
+      focus: {
+        screenTitle: 'Focus Console',
+        subtitle: 'Design attention as carefully as you design priorities.',
+        mainTitle: 'Attention Distribution',
+        mainTag: 'Focus',
+        barHeights: ['34%', '44%', '82%', '76%', '52%', '40%'],
+        stats: [
+          { label: 'Deep work protected', value: '6.8h' },
+          { label: 'Interruptions blocked', value: '41' },
+          { label: 'Session quality', value: '95%' }
+        ],
+        tasks: [
+          ['Lock design sprint session', 'Maker block', '90m', '#3B82F6'],
+          ['Batch admin approvals', 'Low-focus queue', '3pm', '#10B981'],
+          ['Review async updates', 'Team rhythm', '12m', '#F59E0B']
+        ],
+        sideCopy: 'Focus mode separates shallow work from deep work so attention becomes visible and defensible.',
+        sideList: ['2 maker blocks reserved', 'Slack quieted', 'Review window collapsed'],
+        mode: 'Focus mode is active.'
+      },
+      analytics: {
+        screenTitle: 'Intelligence Layer',
+        subtitle: 'See shifts in speed, drag, and delivery before they become problems.',
+        mainTitle: 'Pattern Signals',
+        mainTag: 'Analytics',
+        barHeights: ['58%', '78%', '52%', '90%', '62%', '74%'],
+        stats: [
+          { label: 'Risk alerts', value: '4' },
+          { label: 'Healthy systems', value: '12' },
+          { label: 'Trend confidence', value: '89%' }
+        ],
+        tasks: [
+          ['Flag delivery slowdown', 'Signal engine', 'Auto', '#3B82F6'],
+          ['Surface staffing pressure', 'Forecast layer', 'Live', '#10B981'],
+          ['Recommend ritual change', 'Ops suggestion', 'Ready', '#F59E0B']
+        ],
+        sideCopy: 'Analytics mode reveals operational pressure with enough precision to guide action and enough restraint to stay elegant.',
+        sideList: ['4 anomalies detected', '2 forecasts updated', '1 alert escalated'],
+        mode: 'Analytics mode is active.'
+      },
+      team: {
+        screenTitle: 'Team Alignment',
+        subtitle: 'Keep rituals, status, and ownership in one calm operating surface.',
+        mainTitle: 'Collaboration Health',
+        mainTag: 'Team',
+        barHeights: ['70%', '64%', '58%', '82%', '76%', '80%'],
+        stats: [
+          { label: 'Teams synced', value: '14' },
+          { label: 'Meetings reduced', value: '27%' },
+          { label: 'Ownership clarity', value: '96%' }
+        ],
+        tasks: [
+          ['Run weekly operating review', 'Leadership cadence', 'Friday', '#3B82F6'],
+          ['Resolve cross-team overlap', 'Program ops', '2 owners', '#10B981'],
+          ['Publish status digest', 'Async ritual', 'Queued', '#F59E0B']
+        ],
+        sideCopy: 'Team mode gives structure to communication, so updates feel rhythmic and ownership feels obvious.',
+        sideList: ['5 check-ins merged', '7 leads synced', '1 recap generated'],
+        mode: 'Team mode is active.'
+      }
+    };
+
+    const modeButtons = document.querySelectorAll('.os-sidebar-item');
+    const screenTitle = document.getElementById('os-screen-title');
+    const screenSubtitle = document.getElementById('os-screen-subtitle');
+    const panelMainTitle = document.getElementById('panel-main-title');
+    const panelMainTag = document.getElementById('panel-main-tag');
+    const graphBars = document.getElementById('graph-bars');
+    const miniStatStack = document.getElementById('mini-stat-stack');
+    const taskPanel = document.getElementById('task-panel');
+    const sideBlockCopy = document.getElementById('side-block-copy');
+    const sideList = document.getElementById('side-list');
+    const modeLabel = document.getElementById('mode-label');
+
+    function setMode(modeKey) {
+      const data = osModes[modeKey];
+      if (!data) return;
+
+      modeButtons.forEach((btn) => {
+        const active = btn.dataset.mode === modeKey;
+        btn.classList.toggle('active', active);
+        btn.setAttribute('aria-pressed', active ? 'true' : 'false');
+      });
+
+      screenTitle.textContent = data.screenTitle;
+      screenSubtitle.textContent = data.subtitle;
+      panelMainTitle.textContent = data.mainTitle;
+      panelMainTag.textContent = data.mainTag;
+      sideBlockCopy.textContent = data.sideCopy;
+      modeLabel.textContent = data.mode;
+
+      graphBars.innerHTML = '';
+      data.barHeights.forEach((height, i) => {
+        const bar = document.createElement('div');
+        bar.className = 'bar';
+        bar.style.height = height;
+        bar.style.animationDelay = `${i * 70}ms`;
+        graphBars.appendChild(bar);
+      });
+
+      miniStatStack.innerHTML = '';
+      data.stats.forEach((stat) => {
+        const el = document.createElement('div');
+        el.className = 'mini-stat';
+        el.innerHTML = `<span>${stat.label}</span><strong>${stat.value}</strong>`;
+        miniStatStack.appendChild(el);
+      });
+
+      taskPanel.innerHTML = '';
+      data.tasks.forEach(([title, subtitle, time, color]) => {
+        const task = document.createElement('div');
+        task.className = 'task-item';
+        task.innerHTML = `
+          <div class="task-left">
+            <span class="task-bullet" style="background:${color}"></span>
+            <div>
+              <strong>${title}</strong>
+              <small>${subtitle}</small>
+            </div>
+          </div>
+          <span class="task-time">${time}</span>
+        `;
+        taskPanel.appendChild(task);
+      });
+
+      sideList.innerHTML = '';
+      data.sideList.forEach((item) => {
+        const li = document.createElement('li');
+        li.textContent = item;
+        sideList.appendChild(li);
+      });
+
+      document.getElementById('hero-ui').animate([
+        { transform: 'rotateY(-10deg) rotateX(4deg) scale(0.995)' },
+        { transform: 'rotateY(-14deg) rotateX(8deg) scale(1)' }
+      ], {
+        duration: 320,
+        easing: 'cubic-bezier(.2,.8,.2,1)'
+      });
+    }
+
+    modeButtons.forEach((btn) => {
+      btn.addEventListener('click', () => setMode(btn.dataset.mode));
+    });
+
+    setFeature('workflow');
+    setMode('overview');
+  </script>
+</body>
+</html>
